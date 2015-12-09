@@ -1,0 +1,21 @@
+procedure main()
+	newlen := 0
+	origlen := 0
+	while line := trim(read()) do {
+		newline := ""
+		line[2:-1] ? {
+			while not pos(0) do {
+				newline ||:= tab(upto('\\')|0)
+				="\\" &
+				newline ||:= case move(1) of {
+					"\\":  "\\"
+					"\"":  "\""
+					"x":  char("16r" || move(2))
+				}
+			}
+		}
+		origlen +:= *line
+		newlen +:= *newline
+	}
+	write("total original len=",origlen," total new len=",newlen," diff=", origlen - newlen)
+end

@@ -1,0 +1,136 @@
+
+record binop(op,left,right)
+record uniop(op,opnd)
+record id(name)
+record const(value)
+record symref(def)
+global sym_tab
+global symbols
+global circut
+
+procedure main()
+
+    sym_tab := table()  # Values of each symbol
+    symbols := table()  # Where each symbol is defined on the circut board
+    circut := []        # The circut board
+
+    while line := trim(read()) do {
+        # Parse each line and append to the list of circuts
+        put(circut,parse(line))
+    }
+
+    # Determine the value of "a"
+
+    process(circut[symbols["a"].def])
+    write("a=",sym_tab["a"])
+
+    # Part 2, take a's value and override 'b'
+    aval := sym_tab["a"]
+    bdef := symbols["b"].def
+    # Replace b's definition with a's value
+    sym_tab := table()
+    circut[bdef] := binop("->",const(aval),id("b"))
+
+    process( circut[symbols["a"].def])
+    write("a=",sym_tab["a"])
+
+end
+
+
+# Process a portion of the tree.
+
+procedure process(t)
+    local a, val
+    return case type(t) of {
+        "binop": case t.op of {
+            "->": sym_tab[t.right.name] := process(t.left)
+            "AND": iand(process(t.left),process(t.right))
+            "OR": ior(process(t.left),process(t.right))
+            "LSHIFT": iand(16rffff,ishift(process(t.left),process(t.right)))
+            "RSHIFT": ishift(process(t.left),-process(t.right))
+        }
+        "uniop": case t.op of {
+            "NOT" : {
+                val := process(t.opnd)
+                iand(16rffff,65535 - val)
+            }
+        }
+        "id": \sym_tab[t.name] | 2(process(circut[symbols[t.name].def]),sym_tab[t.name])
+        "const": numeric(t.value)
+
+    }
+end
+
+# Parse the line into a tree
+# Constant ::= digits
+# Id ::= letters
+# Statement ::= Expr <eol>
+# Expr ::= R -> Id
+# R ::= E | L [AND,OR,LSHIFT,RSHIFT] L
+# E ::= L | [NOT] L
+# L ::= Id | Constant
+procedure parse(s)
+    local tree
+    if s ? ((tree := Statement()) & (ws(),pos(0))) then {
+        return tree
+    }
+    write("syntax error")
+end
+procedure AssignID(f)
+    local v
+    suspend 3(v := f(),symbols[v.name] <- symref(*circut +1),v)
+end
+
+procedure Statement()
+    suspend Expr()
+end
+procedure Expr()
+    suspend (binary(R(),litmat("->"),AssignID(Id)))
+end
+procedure R()
+    local t
+    t := scan()
+    suspend E() |
+            binary(save(L,t),litmat(!["AND","OR","LSHIFT","RSHIFT"]),L()) |
+            restore(t)
+end
+procedure E()
+    local t
+    t := scan()
+    suspend unary(save(litNOT,t),L()) |
+            L() |
+            restore(t)
+end
+
+procedure L()
+    suspend Id() | Const()
+end
+procedure Id()
+    suspend 2(ws(),id(tab(many(&letters))))
+end
+procedure Const()
+    suspend 2(ws(),const(tab(many(&digits))))
+end
+procedure litNOT()
+    suspend 2(ws(),="NOT")
+end
+procedure litmat(s)
+    suspend 2(ws(),=s)
+end
+procedure ws()
+    suspend ""|tab(many(' \t'))
+end
+procedure binary(l,o,r)
+   return binop(o,l,r)
+end
+procedure unary(o,r)
+    return uniop(o,r)
+end
+record scan(val,pos)
+procedure save(P,t)
+    return (t.pos <- &pos, t.val := P())
+end
+procedure restore(t)
+    suspend \t.val
+    &pos := \t.pos
+end
