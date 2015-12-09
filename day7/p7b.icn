@@ -6,22 +6,22 @@ record const(value)
 record symref(def)
 global sym_tab
 global symbols
-global circut
+global circuit
 
 procedure main()
 
     sym_tab := table()  # Values of each symbol
-    symbols := table()  # Where each symbol is defined on the circut board
-    circut := []        # The circut board
+    symbols := table()  # Where each symbol is defined on the circuit board
+    circuit := []        # The circuit board
 
     while line := trim(read()) do {
-        # Parse each line and append to the list of circuts
-        put(circut,parse(line))
+        # Parse each line and append to the list of circuits
+        put(circuit,parse(line))
     }
 
     # Determine the value of "a"
 
-    process(circut[symbols["a"].def])
+    process(circuit[symbols["a"].def])
     write("a=",sym_tab["a"])
 
     # Part 2, take a's value and override 'b'
@@ -29,9 +29,9 @@ procedure main()
     bdef := symbols["b"].def
     # Replace b's definition with a's value
     sym_tab := table()
-    circut[bdef] := binop("->",const(aval),id("b"))
+    circuit[bdef] := binop("->",const(aval),id("b"))
 
-    process( circut[symbols["a"].def])
+    process( circuit[symbols["a"].def])
     write("a=",sym_tab["a"])
 
 end
@@ -55,7 +55,7 @@ procedure process(t)
                 iand(16rffff,65535 - val)
             }
         }
-        "id": \sym_tab[t.name] | 2(process(circut[symbols[t.name].def]),sym_tab[t.name])
+        "id": \sym_tab[t.name] | 2(process(circuit[symbols[t.name].def]),sym_tab[t.name])
         "const": numeric(t.value)
 
     }
@@ -78,7 +78,7 @@ procedure parse(s)
 end
 procedure AssignID(f)
     local v
-    suspend 3(v := f(),symbols[v.name] <- symref(*circut +1),v)
+    suspend 3(v := f(),symbols[v.name] <- symref(*circuit +1),v)
 end
 
 procedure Statement()
