@@ -1,0 +1,40 @@
+link ximage
+link scan
+procedure main()
+
+    nice := 0
+    while line := trim(read()) do {
+        chars := cset(line)
+        pairs := set()
+        line ? {
+            while not pos(0) do {
+                insert(pairs,&subject[&pos +: 2]) | break
+                move(1)
+            }
+        }
+        found := &null
+        line ? {
+            every p := !pairs do {
+                tab(find(p)) & move(2) & find(p) & {found := 1 & break}
+            }
+        }
+        if /found then {
+            write("no pairs")
+            next
+        }
+        found := &null
+        line ? {
+            every c := !chars do {
+                tab(upto(c)) & move(2) & match(c) & {found := 1 & break}
+            }
+        }
+        if /found then {
+            write("no repeats")
+            next
+        }
+        nice +:= 1
+    }
+    write("nice=",nice)
+
+
+end

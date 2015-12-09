@@ -1,0 +1,79 @@
+link wopen
+link ximage
+$define W 1000
+$define H 1000
+procedure main()
+    grid := list(W)
+    every x := 1 to W do
+        grid[x] := list(H,0)
+
+    while line := trim(read()) do {
+        line ? {
+            v := parseline()
+            case v[1] of {
+                "turn on" : {
+                    every x := v[2] to v[4] do
+                        every y := v[3] to v[5] do {
+                            grid[x+1][y+1] +:= 1
+
+                        }
+                }
+                "turn off" : {
+                    every x := v[2] to v[4] do
+                        every y := v[3] to v[5] do {
+                            grid[x+1][y+1] -:= 1
+                            if grid[x+1][y+1] < 0 then grid[x+1][y+1] := 0
+
+                        }
+                }
+                "toggle" : {
+                    every x := v[2] to v[4] do
+                        every y := v[3] to v[5] do {
+                            grid[x+1][y+1] +:= 2
+                        }
+                }
+            }
+        }
+
+    }
+    showgrid(grid)
+    c := 0
+    every x := 1 to W do
+        every y := 1 to H do
+            c +:= grid[x][y]
+    write("brightness ",c)
+end
+procedure showgrid(grid)
+    gridx := W||",g16,"
+    grids := ""
+    every x := 1 to W do {
+        write(x)
+        gx := grid[x]
+        GX := (x-1)*W
+        gs := repl("0",H)
+        every y := 1 to H do {
+            if gx[y] ~= 0 then {
+                gs[y] := "F"
+            }
+        }
+        grids ||:= gs
+    }
+    WOpen("size=" || W || "," || H)
+    DrawImage(0,0,gridx||grids)
+    repeat {
+        case Event() of {
+            "q": break
+        }
+    }
+end
+procedure parseline()
+    (cmd := ="turn on" | ="turn off" | ="toggle") &
+    tab(many(' \t')) &
+    c1 := tab(many(&digits)) & ="," &
+    c2 := tab(many(&digits)) & tab(many(' \t')) &
+    ="through" &
+    tab(many(' \t')) &
+    c3 := tab(many(&digits)) & ="," &
+    c4 := tab(many(&digits))
+    return [cmd,integer(c1),integer(c2),integer(c3),integer(c4)]
+end

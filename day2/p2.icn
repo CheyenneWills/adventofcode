@@ -1,0 +1,31 @@
+
+procedure main()
+    total := 0
+    ribtot := 0
+    while box := trim(read()) do {
+        box ? {
+            l := tab(upto('x'))
+            move(1)
+            w := tab(upto('x'))
+            move(1)
+            h := tab(0)
+            s1 := l*w
+            s2 := w*h
+            s3 := h*l
+            smallest := s1
+            smallest >:= s2
+            smallest >:= s3
+            boxsize := 2*s1 + 2*s2 + 2*s3 + smallest
+            total +:= boxsize
+
+            # Part 2 solution follows
+            vol := l*w*h
+            b := l
+            b <:= w
+            b <:= h
+            r := 2 * (l+w+h-b)
+            ribtot +:= r + vol
+        }
+    }
+write(total," ribbon=",ribtot)
+end

@@ -1,0 +1,34 @@
+link ximage
+record location(x,y)
+procedure main()
+    world := table()
+    pos1 := location(0,0)
+    pos2 := location(0,0)
+    cur := pos1
+    world[loc2index(cur)] := 1
+    while line := trim(read()) do {
+        line ? {
+          while not pos(0) do {
+            case move(1) of {
+                "^" : cur.y +:= 1
+                "v" : cur.y -:= 1
+                "<" : cur.x -:= 1
+                ">" : cur.x +:= 1
+            }
+            i := loc2index(cur)
+            /world[i] := 0
+            world[i] +:= 1
+            # Swap .. this is the dirty work for Part 2
+            pos1 :=: pos2
+            cur := pos1
+          }
+        }
+
+    }
+
+    write(*world)
+
+end
+procedure loc2index(loc)
+  return loc.x || "," || loc.y
+end

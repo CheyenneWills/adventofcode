@@ -1,0 +1,42 @@
+procedure main()
+    vowels := 'aeiou'
+    badstrs := ["ab","cd","pq","xy"]
+    nice := 0
+    while line := trim(read()) do {
+        line ? {
+            if find(!badstrs) then {
+                write("badstr")
+                next
+            }
+
+            &pos := 1
+            vc := 0
+            while tab(upto(vowels)) do {
+                vc +:= 1
+                move(1)
+                if vc == 3 then break
+            }
+            if vc ~= 3 then {
+                write("not enough vowels")
+                next
+            }
+            &pos := 1
+            chars := cset(line)
+            dc := &null
+            every c := !chars do {
+                if find(c||c) then {
+                    dc := c
+                    break
+                }
+            }
+            if /dc then {
+                write("no double chars")
+                next
+            }
+            nice +:= 1
+        }
+    }
+    write("nice=",nice)
+
+
+end

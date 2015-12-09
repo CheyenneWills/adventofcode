@@ -1,0 +1,14 @@
+procedure main()
+floor := 0
+basement := &null
+while line := trim(read()) do {
+    line ? {
+        while not pos(0) do {
+            (="(" & floor +:= 1) |
+            (=")" & floor -:= 1)
+            if floor < 0 then /basement := &pos -1  # Part 2
+        }
+    }
+}
+write(floor," basement pos=", basement)
+end
