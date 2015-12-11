@@ -1,0 +1,43 @@
+global paths
+global locations
+global visited
+record path(ab,dist)
+
+procedure main()
+    paths := []
+    locations := set()
+    parse_input()
+    ans := runit()
+    write(ans)
+end
+procedure findshortest(a)
+    # Find the shortest nonused path from/to a
+    d := &null
+    unvisited := (locations --- visted)
+    every p := !paths do {
+        if member(p.ab,a) &
+
+
+    }
+
+end
+procedure parse_input()
+    # Parse input
+    while line := trim(read()) do {
+        line ? {
+            a := tab(upto(' \t'))
+            tab(many(' \t'))
+            ="to"
+            tab(many(' \t'))
+            b := tab(upto(' \t='))
+            tab(many(' \t'))
+            ="="
+            tab(many(' \t'))
+            d := tab(upto(' \t') | 0)
+        }
+        put( paths, path(set(a,b),d) )
+        insert(locations,a)
+        insert(locations,b)
+    }
+
+end
