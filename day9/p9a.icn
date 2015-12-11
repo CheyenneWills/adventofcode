@@ -1,28 +1,103 @@
-global paths
-global locations
-global visited
+
+global paths        # List of all the endpoints and distances
+global locations    # List of just the endpoints
+global visited      # Where have we been
+
 record path(ab,dist)
 
 procedure main()
+
     paths := []
     locations := set()
-    parse_input()
-    ans := runit()
-    write(ans)
-end
-procedure findshortest(a)
-    # Find the shortest nonused path from/to a
-    d := &null
-    unvisited := (locations --- visted)
-    every p := !paths do {
-        if member(p.ab,a) &
 
+    current := [ parse_input() ]
+    dist := current[1].dist
+    visited := copy(current[1].ab)
+
+    until *visited = *locations do {
+
+        # Implement a greedy search
+
+        ends := getfree_ends(current) # Find the two ends points
+        a := findbest(ends[1])        # Find best path associated with left side
+        b := findbest(ends[2])        # Find best path assoicated with right side
+
+        if /a & /b then  stop("what !!! no paths found...")
+
+        if /a then {                  # No destinations to the left
+            put(current,b)            # Append the right destination
+            visited ++:= b.ab         # Add to the visted locations
+            dist +:= b.dist           # add the distance
+
+        } else if /b then {           # No destinations to the right
+            push(current,a)           # Append the left destination
+            visited ++:= a.ab         # Add to the visted locations
+            dist +:= a.dist           # add the distance
+
+        } else if a.dist < b.dist then {  # Pick the best route
+            push(current,a)           # Go to right...
+            visited ++:= a.ab
+            dist +:= a.dist
+        }
+        else {                        # or the left
+            put(current,b)
+            visited ++:= b.ab
+            dist +:= b.dist
+        }
 
     }
 
+    dumppath(current)
+    write("distance is: ",dist)
 end
+procedure dumppath(l)
+    c := sort(l[1].ab -- l[2].ab)[1]
+    every p := !l do {
+        writes(c," -- ",p.dist," -> ")
+        c := sort(p.ab -- set([c]))[1]
+    }
+    write(c)
+end
+procedure getfree_ends(l)
+    # Return the names of the two endpoints..
+    if *l = 1 then return sort(l[1].ab)
+    ls := l[1]
+    la := l[2]
+    lf := ls.ab -- la.ab
+
+
+    rs := l[-1]
+    ra := l[-2]
+    rf := rs.ab -- ra.ab
+    return [sort(lf)[1],sort(rf)[1]]
+end
+
+procedure findunvisited(a)
+    # Generate every unused path from this location
+    every p := !paths do {
+        if not member(p.ab,a) then next
+
+        b := sort(p.ab -- set([a]))[1]
+
+        if member(visited,b) then next
+        suspend p
+    }
+end
+
+procedure findbest(a)
+    # Find the best path from/to a location that wasn't used (if any)
+    s := &null
+    every p := findunvisited(a) do {
+        /s := p
+        if s.dist > p.dist then s := p
+    }
+
+    return s
+end
+
 procedure parse_input()
     # Parse input
+    best := &null
     while line := trim(read()) do {
         line ? {
             a := tab(upto(' \t'))
@@ -35,9 +110,12 @@ procedure parse_input()
             tab(many(' \t'))
             d := tab(upto(' \t') | 0)
         }
-        put( paths, path(set(a,b),d) )
+        p := path(set([a,b]),d)
+        /best := p
+        if d < best.dist then best := p
+        put(paths, p)
         insert(locations,a)
         insert(locations,b)
     }
-
+    return best
 end
