@@ -1,22 +1,22 @@
-procedure main(args)
-	iterations := args[1]
-	s := args[2]
-	every 1 to iterations do {
-		s := newS(s)
-	}
-	write("length is ",*s)
+    procedure main(args)
+    	iterations := args[1]
+    	s := args[2]
+    	every 1 to iterations do {
+    		s := newS(s)
+    	}
+    	write("length is ",*s)
 
-end
-procedure newS(s)
-	S := ""
-	s ? {
-		while not pos(0) do {
-			d := move(1)
-			move(-1)
-			n := tab(many(d)) | ""
-			S ||:= *n || d
-		}
+    end
+    procedure newS(s)
+    	S := ""
+    	s ? {
+    		while not pos(0) do {
+    			d := move(1)
+    			move(-1)
+    			n := tab(many(d))
+    			S ||:= *n || d
+    		}
 
-	}
-	return S
-end
+    	}
+    	return S
+    end
