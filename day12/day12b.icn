@@ -1,0 +1,93 @@
+global sum
+procedure main()
+	sum := 0
+	line := ""
+	while line ||:= trim(read())
+	_parse_json(line)
+	write("sum=",sum)
+end
+# Icon doesn't have a json parser in the library, the following is a quick json parser hack
+# in order to solve day 12, the parsing has the "solution" hacked into the parser...
+procedure _parse_json(s)
+    s ? {
+        ws()
+        if match("{") then o := _json_object()
+        else if match("[") then o := _json_array()
+    }
+    return o
+end
+procedure _json_object()
+    o := table()
+    ="{" | fail
+    oldsum := sum
+    redflag := &null
+    repeat {
+        ws()
+        k := _json_string()
+        ws() &
+        =":" &
+        ws()
+        v := _json_value(k)
+        o[k] := v
+        type(v) == "string" & v ? repeat {
+        		snapshot()
+				tab(upto('-' ++ &digits)) | break
+				sum +:= integer(matchnum())
+			}
+
+        if type(v) == "string" & v == "red" then redflag := 1
+        ws() &
+        ="," | break
+    }
+    if \redflag then sum := oldsum
+    ws()
+    ="}"
+    return o
+end
+procedure matchnum()
+	suspend (="-" | "") || tab(many(&digits))
+end
+procedure _json_array()
+    o := list()
+    ="[" | fail
+    repeat {
+        ws()
+        v := _json_value()
+        put(o,v)
+        type(v) == "string" & v ? repeat {
+				tab(upto('-' ++ &digits)) | break
+				sum +:= integer(matchnum())
+			}
+        ws() &
+        ="," | break
+    }
+    ws()
+    ="]"
+    return o
+end
+procedure _json_value()
+    suspend _json_string() |
+            _json_number() |
+            _json_object() |
+            _json_array() |
+            ="true" |
+            ="false" |
+            ="null"
+end
+procedure sumit(v)
+	sum +:= integer(v)
+	return v
+end
+procedure _json_number()
+    suspend ( (="-"|"") || (="0" |
+    	                        (tab(any('123456789'))) ||
+    	                        (tab(many(&digits)) | "")))        ||
+            ((="." || (tab(many(&digits)))) |"")              ||
+            (( (="E"|="e") || ( (tab(any('+-'))|"") || tab(many(&digits)))) | "")
+end
+procedure _json_string()
+    suspend 2(="\"", 1(tab(upto('"')),&subject[&pos - 1] ~=="\\"),="\"")
+end
+procedure ws()
+    suspend tab(many(' \t')) | ""
+end

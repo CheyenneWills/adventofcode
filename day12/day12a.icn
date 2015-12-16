@@ -1,0 +1,15 @@
+procedure main()
+	v := 0
+	while line := trim(read()) do {
+		line ? {
+			repeat {
+				tab(upto('-' ++ &digits)) | break
+				v +:= integer(matchnum())
+			}
+		}
+	}
+	write("sum=",v)
+end
+procedure matchnum()
+	suspend (="-" | "") || tab(many(&digits))
+end
