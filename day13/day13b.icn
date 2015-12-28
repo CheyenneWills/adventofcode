@@ -1,0 +1,94 @@
+link ximage
+
+global people    # List of just the endpoints
+global seated      # Where have we been
+global happiness
+
+record path(ab,dist)
+
+procedure main()
+
+    people := set()
+    happiness := table()
+
+    # Solution for part b is simple.  Just add "me" to
+    # the list of people and let the Icon's default value
+    # for a table take care of the rest
+    insert(people,"-me-")
+    happiness["-me-"] := table(0)
+
+    parse_input()
+
+    people := sort(people)
+    best := &null
+    best_score := &null
+    every seating := permutate_list(people) do {
+        score := eval_happiness(seating)
+
+        /best_score := score
+        /best := seating
+
+        if score > best_score then {
+            best_score := score
+            best := seating
+        }
+    }
+
+    dumptable(best)
+    write("Happiness is:",best_score)
+end
+procedure eval_happiness(l)
+    local p,s,c,o
+    local score
+    score := 0
+    s := c := l[1]
+    every p := 1 to *l do {
+        o := c
+        c := l[p]
+        score +:= happiness[o][c] + happiness[c][o]
+    }
+
+    score +:= happiness[s][c] + happiness[c][s]
+    return score
+end
+procedure permutate_list(l)
+    local i
+    if *l = 0 then return []
+    suspend [l[i := 1 to *l]] ||| permutate_list(l[1:i] ||| l[i+1:0])
+end
+procedure dumptable(l)
+    s := c := l[1]
+    writes(c," ")
+    every p := 2 to *l do {
+        o := c
+        c := l[p]
+        writes(happiness[o][c]," ",happiness[c][o]," ",c," ")
+    }
+    write(" ",happiness[c][s]," ",happiness[s][c]," ",s)
+
+end
+
+
+
+procedure parse_input()
+    # Parse input
+    while line := trim(read()) do {
+        line ? {
+            tab(many(' \t'))
+            a := tab(upto(' \t'))
+            tab(many(' \t'))
+            ="would"
+            tab(many(' \t'))
+            if ="gain" then tab(many(' \t')) & d := integer(tab(upto(' \t')))
+            else ="lose" & tab(many(' \t')) & d := -integer(tab(upto(' \t')))
+            tab(many(' \t'))
+            ="happiness units by sitting next to"
+            tab(many(' \t'))
+            b := tab(upto('.'))
+        }
+        insert(people,a)
+        insert(people,b)
+        /happiness[a] := table(0)
+        happiness[a][b] := d
+    }
+end
