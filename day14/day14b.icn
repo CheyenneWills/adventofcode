@@ -1,0 +1,56 @@
+link ximage
+
+record data(name,fly,flytime,resttime,bonus)
+
+procedure main(args)
+	racetime := integer(args[1])
+	disttable := table()
+	reindeers := []
+	every put(reindeers,parse_input())
+
+	every tic := 1 to racetime do {
+		every i := 1 to *reindeers do {
+			reindeer := reindeers[i]
+			chunktime := reindeer.flytime + reindeer.resttime
+			nchunks := integer(tic / chunktime)	# How may chunks
+			partial := tic % chunktime
+			fdist := nchunks * (reindeer.fly * reindeer.flytime)
+			if partial < reindeer.flytime then pdist := reindeer.fly * partial
+			else pdist := (reindeer.fly * reindeer.flytime)
+			disttable[reindeer.name] := fdist + pdist
+		}
+		results := sort(disttable,2)
+		tic_best := results[-1][2]
+
+		every i := 1 to *reindeers do {
+			if disttable[reindeers[i].name] = tic_best then {
+				reindeers[i].bonus +:= 1
+			}
+		}
+
+	}
+	results := table()
+	every r := !reindeers do {
+		results[r.name] := r.bonus
+	}
+	results := sort(results,2)
+
+	write("Winner is: ", results[-1][1]," Points:", results[-1][2])
+end
+
+procedure parse_input()
+	while line := trim(read()) do {
+		r := data()
+		line ? {
+			r.name := tab(upto(' \t'))
+			tab(upto(&digits))
+			r.fly := tab(many(&digits))
+			tab(upto(&digits))
+			r.flytime := tab(many(&digits))
+			tab(upto(&digits))
+			r.resttime := tab(many(&digits))
+			r.bonus := 0
+		}
+		suspend r
+	}
+end

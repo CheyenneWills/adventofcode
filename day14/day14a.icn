@@ -1,0 +1,38 @@
+link ximage
+
+record data(name,fly,flytime,resttime)
+
+procedure main(args)
+	racetime := integer(args[1])
+	disttable := table()
+
+	every reindeer := parse_input() do {
+		chunktime := reindeer.flytime + reindeer.resttime
+		nchunks := integer(racetime / chunktime)	# How may chunks
+		partial := racetime % chunktime
+		fdist := nchunks * (reindeer.fly * reindeer.flytime)
+		if partial < reindeer.flytime then pdist := reindeer.fly * partial
+		else pdist := (reindeer.fly * reindeer.flytime)
+		disttable[reindeer.name] := fdist + pdist
+	}
+
+	results := sort(disttable,2)
+
+	write("Winner is: ", results[-1][1]," distance:", results[-1][2])
+end
+
+procedure parse_input()
+	while line := trim(read()) do {
+		r := data()
+		line ? {
+			r.name := tab(upto(' \t'))
+			tab(upto(&digits))
+			r.fly := tab(many(&digits))
+			tab(upto(&digits))
+			r.flytime := tab(many(&digits))
+			tab(upto(&digits))
+			r.resttime := tab(many(&digits))
+		}
+		suspend r
+	}
+end
