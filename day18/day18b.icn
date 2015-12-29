@@ -1,0 +1,56 @@
+procedure main()
+	grid := list(100)
+	every x := 1 to 100 do
+		grid[x] := trim(read())
+	grid[1][1] := "#"
+	grid[1][100] := "#"
+	grid[100][1] := "#"
+	grid[100][100] := "#"
+
+	# Lets play Conway's game of life.. for 100 iterations
+	every 1 to 100 do {
+		newgrid := list(100)
+		every x := 1 to 100 do {
+			newgrid[x] := repl(" ",100)
+			every y := 1 to 100 do {
+				newgrid[x][y] := newstate(grid,x,y)
+			}
+		}
+		grid := newgrid
+		grid[1][1] := "#"
+		grid[1][100] := "#"
+		grid[100][1] := "#"
+		grid[100][100] := "#"
+	}
+	count := 0
+	every x := 1 to 100 do {
+		every c := !grid[x] do
+			if c == "#" then count +:= 1
+	}
+	write(count," lights are on")
+
+end
+procedure newstate(g,x,y)
+	n := get_e(g,x,y-1) ||   # North
+	     get_e(g,x,y+1) ||   # South
+	     get_e(g,x+1,y) ||   # East
+	     get_e(g,x-1,y) ||   # West
+     	 get_e(g,x+1,y-1) || # NE
+         get_e(g,x+1,y+1) || # SE
+	     get_e(g,x-1,y+1) || # SW
+	     get_e(g,x-1,y-1)    # NW
+
+	count := 0
+	every c := !n do
+		if c == "#" then count +:= 1
+
+	if (g[x][y] == "#" & count = (2|3)) |
+	   (g[x][y] == "." & count = 3) then return "#"
+
+	else return "."
+end
+procedure get_e(g,x,y)
+	if x = 0 | x > *g | y = 0 | y > *g[1] then return "."
+	else return g[x][y]
+
+end
