@@ -1,0 +1,27 @@
+procedure main()
+
+	containers := []
+	while put(containers,trim(read()))
+
+	clist := table()
+
+	every i := 1 to *containers do {
+		every l := combinations(containers,i) do {
+			sum := 0
+			every sum +:= !l
+			if sum = 150 then {
+				/clist[*l] := 0
+				clist[*l] +:= 1
+			}
+		}
+	}
+	result := sort(clist)
+	write("smallest number of containers ",result[1][1]," can store in ",result[1][2]," ways")
+
+end
+procedure combinations(L,i)
+	local j
+	if i < 1 then fail
+	suspend if i = 1 then [!L]
+	else [L[ j := 1 to *L - i + 1]] ||| combinations(L[j + 1:0],i - 1)
+end
