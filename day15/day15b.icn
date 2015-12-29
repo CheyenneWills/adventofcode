@@ -1,0 +1,67 @@
+link ximage
+
+record ingredient(name,capacity,durability,flavor,texture,calories)
+
+procedure main()
+	ingredients := []
+	every put(ingredients,parse_input())
+	best := &null
+	best_score := &null
+	every try := gen_amount(ingredients,100) do {
+		score := 0
+		capacity := 0
+		durability := 0
+		flavor := 0
+		texture := 0
+		calories := 0
+		every item := !try do {
+			capacity +:= item[1].capacity * item[2]
+			durability +:= item[1].durability * item[2]
+			flavor +:= item[1].flavor * item[2]
+			texture +:= item[1].texture * item[2]
+			calories +:= item[1].calories * item[2]
+		}
+		if calories ~= 500 then next
+		capacity <:= 1
+		durability <:= 1
+		flavor <:= 1
+		texture <:= 1
+		score := capacity * durability * flavor * texture
+		/best_score := score
+		/best := try
+		if score > best_score then {
+			best_score := score
+			best := try
+		}
+	}
+	write(best_score)
+	xdump(best)
+
+end
+procedure gen_amount(items,v)
+	if *items = 0 then return []
+	if *items = 1 then return [[items[1],v]]
+	every i := 1 to v - (*items - 1) do {
+		suspend [[items[1],i]] ||| gen_amount(items[2:0],v - i)
+	}
+end
+
+
+procedure parse_input()
+	while line := trim(read()) do {
+		item := ingredient()
+		line ? {
+			item.name := tab(upto(':'))
+			item.capacity := get_field("capacity")
+			item.durability := get_field("durability")
+			item.flavor := get_field("flavor")
+			item.texture := get_field("texture")
+			item.calories := get_field("calories")
+		}
+		suspend item
+	}
+end
+procedure get_field(f)
+	&pos := 1
+	return 3(tab(find(f)),tab(upto('-' ++ &digits)),tab(many('-' ++ &digits)))
+end
