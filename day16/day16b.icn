@@ -1,0 +1,39 @@
+procedure main()
+
+	filters := table()
+	filters["children"]    :=  ["=",3]
+	filters["cats"]        :=  [">",7]
+	filters["samoyeds"]    :=  ["=",2]
+	filters["pomeranians"] :=  ["<",3]
+    filters["akitas"]      :=  ["=",0]
+	filters["vizslas"]     :=  ["=",0]
+	filters["goldfish"]    :=  ["<",5]
+	filters["trees"]       :=  [">",3]
+	filters["cars"]        :=  ["=",2]
+	filters["perfumes"]    :=  ["=",1]
+
+	while line := trim(read()) do {
+
+		d := table()
+		line ? {
+			suen := tab(upto(':'))
+			=":"
+			tab(many(' '))
+			while not pos(0) do {
+				v := tab(upto(':'))
+				=":"
+				tab(many(' '))
+				n := integer(tab(many(&digits)))
+				=","
+				tab(many(' '))
+
+				fop := filters[v][1]
+				fv := filters[v][2]
+				if not fop(n,fv) then
+					break next
+
+				}
+			}
+		write(line)
+	}
+end
