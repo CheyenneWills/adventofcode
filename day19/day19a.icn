@@ -1,0 +1,39 @@
+procedure main()
+	rules := table()
+
+	while line := trim(read()) do {
+		if *line = 0 then next
+		line ? {
+			if find("=>") then {
+				o := tab(upto(' '))
+				/rules[o] := []
+				tab(many(' '))
+				="=>"
+				tab(many(' '))
+				put(rules[o],tab(0))
+			}
+			else {
+				tab(many(' '))
+				start := tab(0)
+
+			}
+		}
+	}
+	elements := set()
+	every insert(elements,key(rules))
+	elements := sort(elements)
+
+	replacements := set()
+	every e := !elements do {
+		every i := find(e,start) do {
+			every r := !rules[e] do {
+				rep := start
+				rep[i +:*e] := r
+				write(e," => ", r," : ",start," -> ",rep)
+				insert(replacements,rep)
+			}
+		}
+	}
+	write(*replacements)
+
+end

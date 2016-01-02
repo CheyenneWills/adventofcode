@@ -1,0 +1,49 @@
+procedure main()
+	rules := table()
+
+	while line := trim(read()) do {
+		if *line = 0 then next
+		line ? {
+			if find("=>") then {
+				o := tab(upto(' '))
+				tab(many(' '))
+				="=>"
+				tab(many(' '))
+				r := tab(0)
+				rules[r] := o
+			}
+			else {
+				tab(many(' '))
+				goal := tab(0)
+
+			}
+		}
+	}
+
+	generation := 0
+
+	while goal ~== "e" do {
+		generation +:= 1
+		longestrep := 0
+		bestrep := &null
+		bestpos := &null
+		every k := key(rules) do {
+			goal ? {
+			if p := rfind(k) & *k > longestrep then {
+				longestrep := *k
+				bestrep := k
+				bestpos := p
+			}
+			}
+		}
+		goal[bestpos +:*bestrep] := rules[bestrep]
+	}
+	write(generation)
+
+end
+
+procedure rfind(s)
+	l := []
+	every push(l,find(s))
+	every suspend pop(l)
+end
