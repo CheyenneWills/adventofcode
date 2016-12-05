@@ -1,0 +1,53 @@
+
+procedure main(args)
+	inf := open(args[1],"r")
+	sum := 0
+	while line := !inf do {
+
+		letfreq := table()
+		line ? {
+			names := tab(upto(&digits))
+			sector := integer(tab(many(&digits)))
+			="["
+			check := tab(upto(']'))
+
+			every c := !names do {
+				if c == '-' then next
+				/letfreq[c] := 0
+				letfreq[c] +:= 1
+			}
+		}
+		freqs := sort(letfreq,2)  # Sorted by the count
+
+		letfreq := table()
+		# For every count, make a list of characters
+		every p := !freqs do {
+			l := p[1]
+			c := p[2]
+			/letfreq[c] := []
+			put(letfreq[c],l)
+		}
+
+		every k := key(letfreq) do {
+			letfreq[k] := sort(letfreq[k])
+		}
+		letfreq := sort(letfreq)
+
+		v := [&null,[]]
+		every c := !check do {
+
+			if *v[2] == 0 then
+				v := pull(letfreq)
+
+			if c ~== v[2][1] then
+				break next
+
+			pop(v[2])
+		}
+
+		sum +:= sector
+	}
+
+	close(inf)
+	write(sum)
+end
