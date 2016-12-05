@@ -1,0 +1,41 @@
+procedure main(args)
+	write("New password is:",new := getpw(args[1])) # Part 1
+	write("Next password is:",getpw(new))			 # Part 2
+end
+procedure getpw(pw)
+	every npw := nextpw(pw) do {
+
+		# See if new password meeds the required rules..
+		npw ? {
+			# contains a straight run of 3 of characters?
+			if not find(&lcase[1 to 24 +:3]) then next
+
+			# Must contain two pairs
+			c := 0
+			every l := !&lcase do
+				if find(l||l) then c +:= 1
+			if c < 2 then next
+
+			break
+		}
+	}
+	return npw
+end
+procedure nextpw(s)
+	# Generate the increments of a string
+	letters := &lcase -- 'iol'  # don't include the special letterss
+	p := *s
+	repeat {
+		i := find(l := s[p],letters) + 1
+		if i > *letters then {
+			# Need to carry
+			s[p] := letters[1]
+			p -:= 1
+			if p < 0 then stop("rolled off end")
+			next
+		}
+		else s[p] := letters[i]
+		p := *s
+		suspend s
+	}
+end

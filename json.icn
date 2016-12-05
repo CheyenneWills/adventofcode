@@ -1,0 +1,59 @@
+
+procedure _parse_json(s)
+    s ? {
+        ws()
+        if match("{") then o := _json_object()
+        else if match("[") then o := _json_array()
+    }
+    return o
+end
+procedure _json_object()
+    o := table()
+    ="{" | fail
+    repeat {
+        ws()
+        k := _json_string()
+        ws() &
+        =":" &
+        ws()
+        o[k] := _json_value()
+        ws() &
+        ="," | break
+    }
+    ws()
+    ="}"
+    return o
+end
+
+procedure _json_array()
+    o := list()
+    ="[" | fail
+    repeat {
+        ws()
+        put(o,_json_value())
+        ws() &
+        ="," | break
+    }
+    ws()
+    ="]"
+    return o
+end
+procedure _json_value()
+    suspend _json_string() |
+            _json_number() |
+            _json_object() |
+            _json_array() |
+            ="true" |
+            ="false" |
+            ="null"
+end
+procedure _json_number()
+    suspend numeric((="-"|"") || ="0" | (tab(any('123456789')) || (tab(many(&digits)) | "")) || ((="." || tab(many(&digits)))|"") ||
+            ((tab(any('eE')) || (tab(any('+-'))|"") || tab(many(&digits))) | ""))
+end
+procedure _json_string()
+    suspend 2(="\"", 1(tab(upto('"')),&subject[&pos - 1] ~=="\\"),="\"")
+end
+procedure ws()
+    suspend tab(many(' \t')) | ""
+end

@@ -1,0 +1,112 @@
+record person(name,hitpoints,damage,armor)
+record spell(name,cost,damage,heal,armor,mana,duration)
+
+global spells
+
+
+procedure main()
+	setup()
+	boss := parse_input()
+	best_price := &null
+	best_inventory := &null
+	every inventory := gen_inventory() do {
+		player := person("Player",100)
+		player.damage := inventory.damage
+		player.armor := inventory.armor
+
+		winner := battle(player,boss)
+		if winner.name == "Player" then {
+			/best_price := inventory.cost
+			/best_inventory := inventory
+			if best_price > inventory.cost then {
+				best_price := inventory.cost
+				best_inventory := inventory
+			}
+		}
+
+	}
+	write("best price ",best_price)
+end
+procedure battle(a,d)
+	attacker := copy(a)
+	defender := copy(d)
+	repeat {
+
+		defender.hitpoints -:= (1 < ( attacker.damage - defender.armor ) ) | 1
+
+		if defender.hitpoints <= 0 then {
+			return attacker
+		}
+		defender :=: attacker
+	}
+end
+procedure gen_inventory()
+	every weapon := gen_weapons() do {
+		every armor := gen_armor() do {
+			every ring := gen_rings() do {
+				inventory := item(&null,0,0,0)
+				inventory.name := [weapon,armor,ring]
+				inventory.cost +:= (\weapon).cost
+				inventory.damage +:= (\weapon).damage
+				inventory.armor +:= (\weapon).armor
+
+				inventory.cost +:= (\armor).cost
+				inventory.damage +:= (\armor).damage
+				inventory.armor +:= (\armor).armor
+
+				every r := !(\ring) do {
+					inventory.cost +:= r.cost
+					inventory.damage +:= r.damage
+					inventory.armor +:= r.armor
+				}
+				suspend inventory
+			}
+		}
+	}
+end
+
+procedure gen_weapons()
+	# must have at least one
+	suspend !shop_weapons
+end
+procedure gen_armor()
+	# zero or one
+	suspend &null
+	suspend !shop_armor
+end
+procedure gen_rings()
+	# zero, 1 or two
+	suspend &null
+	suspend [!shop_rings]
+	suspend lcomb(shop_rings,2)
+
+end
+procedure lcomb(L,i)
+	local j
+
+	if i < 1 then fail
+	suspend if i = 1 then [!L]
+		else [L[j := 1 to *L - i + 1]] ||| lcomb(L[j+1:0],i-1)
+end
+
+
+procedure parse_input()
+	while line := trim(read()) do {
+		line ? {
+			hitpoints := 3(="Hit Points:",tab(upto(&digits)),integer(tab(many(&digits))))
+			damage := 3(="Damage:",tab(upto(&digits)),integer(tab(many(&digits))))
+		}
+	}
+	return person("Boss",hitpoints,damage,0)
+end
+procedure setup()
+
+	spells := [          #   cost damage heal armor mana duration
+		spell("Magic Missle",53,  4,     0,   0,    0,   1),
+		spell("Drain",       73,  2,     2,   0,    0,   1),
+		spell("Shield",      113, 0,     0,   7,    0    6),
+		spell("Poison",      173, 3,     0,   0,    0,   6),
+		spell("Recharge",    229, 0,     0,   0,   101,  5)
+	]
+
+end
