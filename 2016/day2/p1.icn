@@ -1,0 +1,27 @@
+link ximage
+procedure main(args)
+
+    inf := open(args[1],"r")
+    indata := list()
+    every put(indata,!inf)
+    close(inf)
+
+    # Each element is [U,D,L,R]
+    dirmap := "UDLR"
+    keymapping := [
+        [&null,4,    &null,2],  [&null,5,    1,3], [&null,6,    2,&null],
+        [1,    7,    &null,5],  [2,    8,    4,6], [3,    9,    5,&null],
+        [4,    &null,&null,8],  [5,    &null,7,9], [6,    &null,8,&null]
+    ]
+
+    curkey := 5
+    ans := ""
+    every keyline := !indata do {
+        every keydir := !keyline do {
+            dirindex := find(keydir,dirmap) | stop("input error")
+            curkey := \(keymapping[curkey][dirindex])
+        }
+        ans ||:= curkey
+    }
+    write(ans)
+end

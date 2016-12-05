@@ -1,0 +1,17 @@
+link ximage
+procedure main(args)
+	inf := open(args[1],"r")
+	valid := 0
+	ws := '\t ,'
+	while line := !inf do {
+		line ? {
+			in := []
+			tab(many(ws))
+			while put(in,integer(tab(upto(' \t,')|0))) do
+				tab(many(ws))
+		}
+		in := sort(in)
+		if in[1] + in[2] > in[3] then valid +:= 1
+	}
+	write(valid)
+end

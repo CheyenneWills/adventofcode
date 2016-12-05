@@ -1,0 +1,36 @@
+procedure main(args)
+    inf := open(args[1],"r")
+    indata := read(inf)
+    close(inf)
+
+    x := 0
+    y := 0
+    dirmap := table()
+    dirmap["NL"] := "W"
+    dirmap["NR"] := "E"
+    dirmap["EL"] := "N"
+    dirmap["ER"] := "S"
+    dirmap["SL"] := "E"
+    dirmap["SR"] := "W"
+    dirmap["WL"] := "S"
+    dirmap["WR"] := "N"
+
+    facing := "N"
+
+    ws := ' \t,'
+    indata ? while not pos(0) do {
+        tab(many(ws))
+        movement := tab(upto(ws)|0) 
+        dir := movement[1]
+        amt := integer(movement[2:0])
+        newface := dirmap[facing || dir]
+        case newface of {
+            "N" : x +:= amt
+            "E" : y +:= amt
+            "S" : x -:= amt
+            "W" : y -:= amt
+        }
+        facing := newface
+    }
+    write("Ending pos: ",x," ",y,"  ->", abs(x) + abs(y))
+end
