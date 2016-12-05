@@ -1,0 +1,56 @@
+
+record point(x,y)
+procedure main(args)
+    # Input comes in as a single line
+    inf := open(args[1],"r")
+    indata := read(inf)
+    close(inf)
+
+    dirmap := table()
+    dirmap["NL"] := ["W",-1,0]
+    dirmap["NR"] := ["E",1,0]
+    dirmap["EL"] := ["N",0,1]
+    dirmap["ER"] := ["S",0,-1]
+    dirmap["SL"] := ["E",1,0]
+    dirmap["SR"] := ["W",-1,0]
+    dirmap["WL"] := ["S",0,-1]
+    dirmap["WR"] := ["N",0,1]
+
+    history := table()
+
+    facing := "N"
+    history["0,0"] := "*"
+    curpos := point(0,0)
+
+    hq := &null
+
+    ws := ' \t,'
+
+    indata ? while not pos(0) do {
+        tab(many(ws))
+
+        movement := tab(upto(ws)|0)
+        dir := movement[1]
+        amt := integer(movement[2:0])
+
+        newdir := dirmap[facing || dir]
+        facing := newdir[1]
+        xdelta := newdir[2]
+        ydelta := newdir[3]
+
+        every 1 to amt do {
+            curpos.x +:= xdelta
+            curpos.y +:= ydelta
+            cpos := curpos.x || "," || curpos.y
+            if \history[cpos] then {
+                hq := curpos
+                break break
+            }
+        }
+    }
+
+    if \hq then
+        write("Ending pos: ",hq.x," ",hq.y,"  ->", abs(hq.x) + abs(hq.y))
+    else
+        write("no end..")
+end
