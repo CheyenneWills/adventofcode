@@ -1,4 +1,4 @@
-link ximage
+
 procedure main(args)
 	inf := open(args[1],"r")
 	valid := 0
