@@ -1,0 +1,20 @@
+link ximage
+procedure main(args)
+    inf := open(args[1],"r")
+    cols := &null
+    every line := !inf do {
+        if /cols then {
+            cols := list(*line)
+            every i := 1 to *cols do cols[i] := table(0)
+        }
+        line ? while not pos(0) do
+            cols[&pos][move(1)] +:= 1
+
+    }
+    close(inf)
+
+    every writes(sort(!cols,2)[-1][1])
+    write()
+    every writes(sort(!cols,2)[1][1])
+    write()
+end
