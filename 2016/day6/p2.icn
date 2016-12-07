@@ -1,0 +1,20 @@
+
+procedure main(args)
+	inf := open(args[1],"r")
+	cols := &null
+	every line := !inf do {
+		if /cols then {
+			cols := list(*line)
+			x := create(1 to *cols)
+			while cols[@x] := table(0)
+		}
+		x := ^x
+		every c := !line do
+			cols[@x][c] +:= 1
+	}
+	close(inf)
+	msg := ""
+	x := ^x
+	while msg ||:= sort(cols[@x],2)[1][1]
+	write(msg)
+end
