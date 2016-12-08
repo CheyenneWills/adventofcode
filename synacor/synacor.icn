@@ -1,7 +1,8 @@
 link scan
-global Mem
+global Memory
+record Mem(i,v)
 global Regs
-record Reg(v)
+record Reg(i,v)
 global Stack
 global SP
 global IP
@@ -25,28 +26,33 @@ procedure main(args)
     close(inf)
 
     repeat {
-        case Mem[IP+:=1] of {
+        opcode := Fetch()
+        case opcode of {
             0 : { # Halt
                 break
             }
             1 : { # set: 1 a b set register <a> to the value of <b>
-                a := getVal(IP+:=1)
-                b := getVal(IP+:=1)
+                a := Fetch()
+                b := Fetch()
                 if type(a) ~== "Reg" then stop("Invalid register")
-                if type(b) == "Reg" then b := Regs[b.v+1]
-                Regs[a.v+1] := b
+                Stor(a,b)
             }
             2 : { # push: 2 a push <a> onto the stack
-                push(Stack,getVal(IP+:=1))
+                push(Stack,Fetch().v)
             }
             3 : { # pop: 3 a remove the top element from the stack and write it into <a>; empty stack = error
                 if *Stack = 0 then stop("Empty Stack Error")
                 v := pop(Stack)
+                a := Fetch()
+                Stor(a,v)
                 a := getVal(IP+:=1)
                 if type(a) == "Reg" then Regs[a.v+1] := v
                 else Mem[a+1] := v
             }
-            4: { #
+            4: { #eq: 4 a b c   set <a> to 1 if <b> is equal to <c>; set it to 0 otherwise
+                a := getVal(IP+:=1)
+                b := getVal(IP+:=1)
+                c := getVal(IP+:=1)
 
             }
         }
@@ -67,14 +73,26 @@ procedure pack(n)
     s ||:= char(n/256)
     return s
 end
-
-procedure getVal(addr)
-    /addr := IP
-    v := Mem[addr]
-    if v < 32768 then return v
-    if v > 32776 then stop("Invalid number")
-    return Reg(v - 32768) # Return a register value
+procedure Stor(loc,v)
+    if type(loc) == "Reg" then Regs[loc.i] := v.v
+    else if type(loc) == "Mem" then Memory[loc.v+1] := v.v
+    else Memory[loc.v+1] := v
+    return
 end
+procedure Peek(addr)
+    /addr := IP
+    w := Memory[addr+1]
+    if w < 32768 then return Mem(addr,w)
+    if w > 32776 then stop("Invalid memory value")
+    w -:= 32768
+    return Reg(w-32768,Regs[w+1])
+end
+procedure Fetch(addr)
+    v := Peek(addr)
+    if /addr then IP +:= 1
+    return v
+end
+
 
 
 
@@ -89,7 +107,5 @@ procedure Init()
     SP := 0
     IP := 0
     CC := 0
-    opFuncs := [
 
-    ]
 end

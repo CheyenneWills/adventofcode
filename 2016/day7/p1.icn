@@ -1,0 +1,38 @@
+procedure main(args)
+	inf := open(args[1],"r")
+	count := 0
+	while line := !inf do {
+		TLS := &null
+		line ? every tok := token() do {
+			if match('[',tok) then {
+				if find(gen_abba(tok[2:-1]),tok[2:-1]) then {
+					TLS := &null
+					break
+				}
+			}
+			else if find(gen_abba(tok),tok) then TLS := 1
+		}
+		if \TLS then count +:= 1
+		# write("--<",line,">--- ",(\TLS & "TLS") | "NOT TLS")
+	}
+	write(count)
+end
+
+# Generate all the abba strings for a given string
+procedure gen_abba(s)
+	c := string(cset(s))
+	every a := !c do
+		every b := !c do
+			if a ~== b then
+				suspend a || b || b || a
+end
+
+# Generate tokens
+procedure token()
+	while not pos(0) do {
+
+		if match("[") then v := tab(upto(']')) || move(1)
+		else v := tab(upto('[')|0)
+		suspend v
+	}
+end

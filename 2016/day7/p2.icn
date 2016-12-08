@@ -1,0 +1,84 @@
+procedure main(args)
+	inf := open(args[1],"r")
+	tlscount := 0
+	sslcount := 0
+
+	while line := !inf do {
+
+		# Build list of supernet strings and hypernet strings
+		supernet := []
+		hypernet := []
+		line ? every tok := token() do {
+			if match('[',tok) then put(hypernet,tok[2:-1])
+			else put(supernet,tok)
+		}
+
+		TLS := &null
+		SSL := &null
+
+		# Look at all the supernet strings
+		#   - determine if there are any abba strings (TLS if any are found)
+		# 	- find all the aba strings add to the set of aba strings
+		abaset := set()
+		every p := !supernet do {
+
+			if /TLS & find(gen_abba(p),p) then TLS := 1
+
+			every find(x := gen_aba(p),p) do insert(abaset,x)
+		}
+
+		# Look at all the hypernet strings
+		#  - determine if there are any abba strings (not TLS if any are found)
+		#  - See if any bab strings can be found (SSL if so)
+		every p := !hypernet do {
+
+			if \TLS & find(gen_abba(p),p) then TLS := &null
+
+			if /SSL & find( gen_bab(abaset),p) then SSL := 1
+
+		}
+
+		# increment counts as necessary
+		if \SSL then sslcount +:= 1
+		if \TLS then tlscount +:= 1
+
+
+		# write("--<",line,">--- ",(\TLS & "TLS ") | "NOT TLS ",  (\SSL & " SSL ") | " NOT SSL ")
+	}
+	write("TLS=",tlscount," SSL=",sslcount)
+end
+
+
+# Generate all abba sequences from a given string
+procedure gen_abba(s)
+	c := string(cset(s))
+	every a := !c do
+		every b := !c do
+			if a ~== b then
+				suspend a || b || b || a
+end
+
+# Generate all aba sequences from a given string
+procedure gen_aba(s)
+	c := string(cset(s))
+	every a := !c do
+		every b := !c do
+			if a ~== b then
+				suspend a || b || a
+end
+
+# Generate all bab sequences from a list of aba strings
+procedure gen_bab(abal)
+	every aba := !abal do
+		suspend aba[2] || aba[1] || aba[2]
+end
+
+# Generate tokens
+procedure token()
+	while not pos(0) do {
+
+		if match("[") then v := tab(upto(']')) || move(1)
+		else v := tab(upto('[')|0)
+		suspend v
+	}
+end
