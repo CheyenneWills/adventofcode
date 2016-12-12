@@ -1,0 +1,240 @@
+link ximage
+global items,I
+global seen_states
+procedure main(args)
+
+        I := makeOPT([
+                "H",
+                "L",
+                "po",
+                "th",
+                "pr",
+                "ru",
+                "co",
+                "el",
+                "di"
+        ])
+
+xdump(I)
+        part1_floors := [
+
+                        I["pog"] ++ I["thg"] ++ I["thm"] ++ I["prg"] ++
+                        I["rug"] ++ I["rum"] ++ I["cog"] ++ I["com"],
+
+                        I["pom"] ++ I["prm"],
+                        '',
+                        ''
+                        ]
+        part2_floors := [
+
+                        I["elg"] ++ I["elm"] ++ I["dig"] ++ I["dim"] ++
+                        I["pog"] ++ I["thg"] ++ I["thm"] ++ I["prg"] ++
+                        I["rug"] ++ I["rum"] ++ I["cog"] ++ I["com"],
+
+                        I["pom"] ++ I["prm"],
+                        '',
+                        ''
+                        ]
+
+        test_floors := [
+                I["Hm"] ++ I["Lm"],
+                I["Hg"],
+                I["Lg"],
+                ''
+           ]
+
+
+        floors := part1_floors
+
+        items := ''     # Set of all the parts (chips and rtgs)
+                                    # used by Show..
+        every items ++:= !floors
+
+        seen_states := set()
+        insert(seen_states,State_str(1,floors))
+
+        Show(1,floors,"Initial")
+
+        finished := search([[1,floors]],0)
+
+        Show(*floors,finished[1],"Final " || finished[2])
+end
+
+procedure makeOPT(f)
+        # Convert the names to single character pairs
+        optMap := table()
+        n := 1
+        every i := !f do {
+                optMap[i||"g"] := cset(&ucase[n])
+                optMap[i||"m"] := cset(&lcase[n])
+                n+:=1
+        }
+        return optMap
+end
+
+procedure search(statel,step)
+# Do a breadth-first search
+        write("Step: ",step, " nstates=",*statel)
+        if *statel = 0 then fail
+
+        newstates := []
+        every tstate := !statel do {
+
+                e := tstate[1]  # Elevator pos
+                s := tstate[2]  # State
+                #Show(e,s,"Step="||step)
+                every new := genMove(e,s) do {
+                        #write("genMove: ",new[1]," ",new[2])
+
+                        newstate := Move(e,new[1],s,new[2])
+
+                        if member(seen_states,State_str(new[1],newstate)) then next
+                        else insert(seen_states,State_str(new[1],newstate))
+
+                        if isValid(newstate) then {
+                                put(newstates,[new[1],newstate,i])
+                                if Done(newstate) then {
+                                        return [newstate,step+1]
+                                }
+                        }
+                }
+        }
+
+        return search(newstates,step+1)
+end
+
+procedure Move(e,ne,s,i)
+        # set a state...
+        new := Copy(s)
+        new[e]  := s[e]  -- i
+        new[ne] := s[ne] ++ i
+        return new
+
+end
+procedure Done(s)
+        # All items are on the top floor
+        return *s[-1] = *items
+end
+
+
+procedure genMove(e,s)
+        # for a given state, generate all possible moves
+        #      2 items up
+        #      1 item up
+        #      1 item down
+        #      2 items down
+
+        # Move things upward
+        if e < *s then {
+                every pair := comb(s[e],2) do {
+
+                        if pair[1] << 'a' &     # isUpper?
+                           pair[2] >> 'Z' &     # isLower?
+                           ord(pair[1]) + 32 ~= ord(pair[2]) then next
+
+                        suspend [e+1,pair]
+                }
+                every item := comb(s[e],1) do
+                        suspend [e+1,item]
+        }
+
+        # move things down
+
+        if e > 1 then {
+                every item := comb(s[e],1) do {
+                        suspend [e-1,item]
+                }
+
+                every pair := comb(s[e],2) do {
+
+                        if pair[1] << 'a' &     # isUpper?
+                           pair[2] >> 'Z' &     # isLower?
+                           ord(pair[1]) + 32 ~= ord(pair[2]) then next
+
+                        suspend[e-1,pair]
+                }
+        }
+end
+
+
+
+
+
+procedure isValid(s)
+        # Uppercase are chips
+        # Lowercase are rtgs
+        #    Aa - okay       - chips = A,  rtgs = a, unsafe = ''
+        #    AB - okay       - chips = AB, rtgs = '', unsafe = ''
+        #    Ab - bad        - chips = A,  rtgs = b, unsafe = 'b'
+        #    ab - okay
+        #    Aab - bad
+        every f := !s do {
+                chips := f ** &ucase
+                rtgs  := f ** &lcase
+                if *chips = 0 | *rtgs = 0 then next
+
+                unsafe := rtgs -- cset(map(chips))
+                if *rtgs > 0 & *unsafe > 0 then fail
+        }
+        return
+end
+
+procedure State_str(e,s)
+        o := e || ": "
+        every f := !s do {
+                if *f = 0 then o ||:= "()"
+                else o ||:= "(" || f || ")"
+        }
+        return o
+end
+
+procedure comb(l,i)
+        # Generate combos from a list of set taken i at a time
+        local j
+        suspend if i = 1 then cset(!l)
+                else l[j := 1 to *l - i + 1] ++ comb( l[j+1:0],i-1)
+
+end
+
+
+procedure Copy(a)
+        # Perform a deep copy
+        new := list(*a)
+        every i := 1 to *a do {
+                new[i] := copy(a[i])
+        }
+        return new
+end
+
+procedure Show(e,x,title)
+
+        static itemlist,revmap,w
+        initial {
+
+                revmap := table()
+                w := -1
+                every i := key(I) do {
+                        k := I[i]
+                        revmap[k] := i
+                        w <:= *i
+                }
+        }
+
+        /title := ""
+
+        write(left(".--- " || title || " -", 7+(*items * (w+1)),"-"),"." )
+        every i := *x to 1 by -1 do {
+                writes("| F",i," ")
+                if e = i then writes("E")
+                else writes(".")
+                every t := cset(!items) do {
+                        writes(" ")
+                        if *(x[i] ** t) > 0 then writes(left(revmap[t],w))
+                        else writes(left(".",w))
+                }
+                write(" |")
+        }
+        write(left(".",7+(*items * (w+1)),"_"),".\n")
+
+        return
+end

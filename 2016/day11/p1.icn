@@ -1,0 +1,193 @@
+
+global items
+global seen_states
+procedure main(args)
+
+        part1_floors := [set(["pog","thg","thm","prg","rug","rum","cog","com"]),
+                           set(["pom","prm"]),
+                           set([]),
+                           set([])]
+
+        part2_floors := [set(["elg","elm","dig","dim","pog","thg","thm","prg","rug","rum","cog","com"]),
+                           set(["pom","prm"]),
+                           set([]),
+                           set([])]
+        test_floors := [
+                set([" Hm"," Lm"]),
+                set([" Hg"]),
+                set([" Lg"]),
+                set([])
+           ]
+
+        floors := part1_floors 
+
+        items := set() # Set of all the parts (chips and rtgs)
+                                   # used by Show..
+        every items ++:= !floors
+
+        seen_states := set()
+        insert(seen_states,State_str(1,floors))
+
+        Show(1,floors,"Initial")
+
+        finished := search([[1,floors]],0)
+
+        Show(*floors,finished[1],"Final " || finished[2])
+end
+
+procedure search(statel,step)
+# Do a breadth-first search
+        write("Step: ",step, " nstates=",*statel)
+        if *statel = 0 then fail
+
+        newstates := []
+        every tstate := !statel do {
+
+                e := tstate[1]  # Elevator pos
+                s := tstate[2]  # State
+
+                every new := genMove(e,s) do {
+
+                        newstate := Move(e,new[1],s,new[2])
+
+                        if member(seen_states,State_str(new[1],newstate)) then next
+                        else insert(seen_states,State_str(new[1],newstate))
+
+                        if isValid(newstate) then {
+                                put(newstates,[new[1],newstate,i])
+                                if Done(newstate) then {
+                                        return [newstate,step+1]
+                                }
+                        }
+                }
+        }
+
+        return search(newstates,step+1)
+end
+
+procedure Move(e,ne,s,i)
+        # set a state...
+        new := Copy(s)
+        new[e]  := s[e]  -- set(i)
+        new[ne] := s[ne] ++ set(i)
+        return new
+
+end
+procedure Done(s)
+        # All items are on the top floor
+        return *s[-1] = *items
+end
+procedure genMove(e,s)
+        # for a given state, generate all possible moves
+        #      2 items up
+        #      1 item up
+        #      1 item down
+        #      2 items down
+
+        # Move things upward
+        if e < *s then {
+                every pair := sort(comb(s[e],2)) do {
+                        if pair[1][-1] == "g" &
+                           pair[2][-1] == "m" &
+                           pair[1][1:-1] ~== pair[2][1:-1] then next
+                        suspend [e+1,pair]
+                }
+                every item := comb(s[e],1) do
+                        suspend [e+1,item]
+        }
+
+        # move things down
+
+        if e > 1 then {
+                every item := comb(s[e],1) do {
+                        suspend [e-1,item]
+                }
+
+                every pair := sort(comb(s[e],2)) do {
+                        if pair[1][-1] == "g" &
+                           pair[2][-1] == "m" &
+                           pair[1][1:-1] ~== pair[2][1:-1] then next
+
+                        suspend[e-1,pair]
+                }
+        }
+end
+
+
+
+
+procedure isValid(s)
+
+        every f := !s do {
+                chips := set()
+                rtgs  := set()
+                every insert(chips, i := !f & i[-1]=="m" & i)   # all the chips
+                every insert(rtgs, i := !f & i[-1]=="g" & i)    # all the rtgs
+
+                every c := !chips do {
+                        rtg := c[1:-1] || "g"
+                        if *rtgs > 0 & not member(rtgs,rtg) then {
+                                fail    # a chip without an rtg with any other rtgs is invalid
+                        }
+                }
+        }
+        return
+end
+
+procedure State_str(e,s)
+        o := e || ": "
+        every f := !s do {
+                l := sort(f)
+                i := ""
+                every i ||:= !l || ","
+                if *i = 0 then o ||:= "()"
+                else o ||:= "(" || i[1:-1] || ")"
+        }
+        return o
+end
+
+procedure comb(s,i)
+        # Generate combos from a list of set taken i at a time
+        local j,l
+        if type(s) == "set" then l := sort(s)
+        else l := s
+        suspend if i = 1 then [!l]
+                else [ l[j := 1 to *l - i + 1]] ||| comb( l[j+1:0],i-1)
+
+end
+
+
+procedure Copy(a)
+        # Perform a deep copy
+        new := list(*a)
+        every i := 1 to *a do {
+                new[i] := copy(a[i])
+        }
+        return new
+end
+
+procedure Show(e,x,title)
+
+        static itemlist
+        initial {
+                itemlist := sort(items)
+        }
+
+        /title := ""
+
+        write(left(".--- " || title || " -", 7+(*itemlist*4),"-"),"." )
+        every i := *x to 1 by -1 do {
+                writes("| F",i," ")
+                if e = i then writes("E")
+                else writes(".")
+                every t := !itemlist do {
+                        writes(" ")
+                        if member(x[i],t) then writes(t)
+                        else writes(".  ")
+                }
+                write(" |")
+        }
+        write(left(".",7+(*itemlist*4),"_"),".\n")
+
+        return
+end

@@ -1,0 +1,62 @@
+global screen
+procedure main(args)
+	inf := open(args[1],"r")
+	ws := ' \t'
+	screen := list(6)
+	every i := 1 to *screen do screen[i] := repl('.',50)
+	displayscreen()
+	while line := trim(!inf) do {
+		write(line)
+		line ? {
+			if ="rect" then {
+				tab(many(ws))
+				a := integer(tab(upto('x')))
+				move(1)
+				b := integer(tab(0))
+				rect(a,b)
+			} else if ="rotate row" then {
+				tab(many(ws))
+				="y="
+				a := integer(tab(upto(ws)))
+				tab(many(ws))
+				="by"
+				tab(many(ws))
+				b := integer(tab(0))
+				rotaterow(a,b)
+			} else if ="rotate column" then {
+				tab(many(ws))
+				="x="
+				a := integer(tab(upto(ws)))
+				tab(many(ws))
+				="by"
+				tab(many(ws))
+				b := integer(tab(0))
+				rotatecol(a,b)
+			}
+		}
+		displayscreen()
+	}
+	count := 0
+	every r := !screen do every find("#",r) do count +:= 1
+	write(count)
+end
+procedure rect(a,b)
+	every i := 1 to b do
+		screen[i][1+:a] := repl("#",a)
+end
+procedure rotaterow(a,b)
+	nr := screen[a+1][-b:0] || screen[a+1][1+:50-b]
+	screen[a+1] := nr
+end
+procedure rotatecol(a,b)
+	col := repl(" ",*screen)
+	every i := 1 to *screen do
+		col[i] := screen[i][a+1]
+	nc := col[-b:0] || col[1+:6-b]
+	every i := 1 to *screen do
+		screen[i][a+1] := nc[i]
+end
+procedure displayscreen()
+	every write(!screen)
+	write()
+end

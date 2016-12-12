@@ -1,0 +1,37 @@
+link scan
+procedure main(args)
+
+	inf := open(args[1],"r")
+	filelen := 0
+	while line := !inf do {
+		linelen := 0
+		line ? while not pos(0) do {
+			linelen +:= decoder()
+		}
+		filelen +:= linelen
+	}
+	write(filelen)
+end
+
+# Returns the length of the "next" part
+procedure decoder()
+	snapshot()
+	s := &pos
+	tab(upto('(')|0)
+	l := &pos - s
+	if pos(0) then return l
+
+	="("
+	nchars := tab(many(&digits))
+	="x"
+	rep := tab(many(&digits))
+	=")"
+
+	npart := move(nchars) | return l
+	n := 0
+	npart ? while not pos(0) do {
+		n +:= decoder()
+	}
+
+	return l + (n * rep)
+end

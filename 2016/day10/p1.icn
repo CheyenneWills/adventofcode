@@ -1,0 +1,89 @@
+record xfer(bot,lowtype,low,hightype,high)
+record stor(bot,val)
+global output,bots,bmaps
+procedure main(args)
+	inf := open(args[1],"r")
+
+	bmaps := table() # bot mapping
+	bots := table() # what each bot is holding..
+	output := table() # whats in the output
+	assignqueue := []
+	while line := !inf do {
+		line ? stmt := parser()
+
+		if type(stmt) == "xfer" then bmaps[stmt.bot] := stmt
+		else put(assignqueue,stmt)
+
+	}
+
+	every stmt := !assignqueue do {
+		/bots[stmt.bot] := []
+		put(bots[stmt.bot],stmt.val)
+		dochain(stmt.bot)
+	}
+	write( output["0"][1] * output["1"][1] * output["2"][1] )
+end
+procedure dochain(b)
+
+	if *bots[b] ~=2 then return
+
+	v1 := bots[b][1]
+	v2 := bots[b][2]
+	if v1 > v2 then v1 :=: v2 # Swap
+
+	if v1 == "17" & v2 == "61" then write("bot ",b, " ",v1,":",v2)
+
+	bots[b] := []
+
+	low := bmaps[b].lowtype
+	/low[bmaps[b].low] := []
+	put(low[bmaps[b].low],v1)
+
+	high := bmaps[b].hightype
+	/high[bmaps[b].high] := []
+	put(high[bmaps[b].high],v2)
+
+	if low === bots then
+		dochain(bmaps[b].low)
+
+	if high === bots then
+	dochain(bmaps[b].high)
+end
+procedure parser()
+	(
+		="bot" &
+		v := xfer() &
+		ws() &
+		v.bot := tab(many(&digits)) &
+		ws() &
+		="gives low to" &
+		ws() &
+		((="bot" & v.lowtype := bots) |
+		 (="output" & v.lowtype := output)) &
+		ws() &
+		v.low := tab(many(&digits)) &
+		ws() &
+		="and high to" &
+		ws() &
+		((="bot" &  v.hightype := bots) |
+		(="output" & v.hightype := output)) &
+		ws() &
+		v.high := tab(many(&digits)) &
+		return v
+	) |
+	(
+		="value" &
+		v := stor() &
+		ws() &
+		v.val := tab(many(&digits)) &
+		ws() &
+		="goes to bot" &
+		ws() &
+		v.bot := tab(0) &
+		return v
+	) |
+	stop("invalid input")
+end
+procedure ws()
+	suspend tab(many(' \t')) | ""
+end

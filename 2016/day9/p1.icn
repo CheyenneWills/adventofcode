@@ -1,0 +1,21 @@
+procedure main(args)
+	inf := open(args[1],"r")
+	filelen := 0
+	while line := !inf do {
+		output := ""
+		line ? while not pos(0) do {
+			output ||:= tab(upto('(') | 0)
+			if ="(" then {
+				nchars := integer(tab(many(&digits)))
+				="x"
+				rep := integer(tab(many(&digits)))
+				=")"
+				output ||:= repl(move(nchars),rep)
+			}
+		}
+		write(line)
+		write(*output," ",output)
+		filelen +:= *output
+	}
+	write(filelen)
+end
