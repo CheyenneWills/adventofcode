@@ -1,0 +1,123 @@
+link ximage
+link scan
+global bots,output,bingo
+
+procedure main(args)
+
+	inf := open(args[1],"r")
+
+	data := []
+	every put(data,!inf)
+	close(inf)
+
+	bots := table()   # table of bots...
+	output := table() # output
+	assigns := []
+	every line := !data do {
+		# 1st pass, create the mappings
+		line ? {
+			if ="bot" then {
+
+				tab(upto(&digits))
+				botid := integer(tab(many(&digits)))
+
+				tab(find("gives"))
+				="gives low to"
+
+				tab(many('\t '))
+				if ="bot" then {
+				        tab(upto(&digits))
+				        lowbotid := integer(tab(many(&digits)))
+				}
+				else {
+					tab(upto(&digits))
+					lowbotid := tab(many(&digits))
+				}
+
+				tab(find("and"))
+				="and high to"
+				tab(many('\t '))
+				if ="bot" then {
+				        tab(upto(&digits))
+				        highbotid := integer(tab(many(&digits)))
+				}
+				else {
+					tab(upto(&digits))
+					highbotid := tab(many(&digits))
+				}
+
+				bots[botid] := create bot(botid,lowbotid,highbotid)
+			}
+			else if ="value" then {
+
+				tab(upto(&digits))
+				chipid := integer(tab(many(&digits)))
+
+				tab(upto(&digits))
+				botid := integer(tab(many(&digits)))
+				put(assigns,[botid,chipid])
+			}
+		}
+	}
+
+	runit := create manufacture(assigns)
+	@runit
+
+	write("----")
+	write(bingo)
+	write( output[0] * output[1] * output[2] )
+end
+
+procedure manufacture(l)
+	every item := !l do {
+		botid := item[1]
+		chipid := item[2]
+		["TOP",chipid]@bots[botid]
+	}
+	@&main
+end
+
+
+procedure bot(id,low,high)
+
+		holding := []
+		write("BOT:",id, " waiting for chips (",low,",",high,")")
+
+		while x := @&source do {
+				if /x then next
+				fromid := x[1]
+				chip := x[2]
+				write("BOT:",id," got Chip ",chip, " from ",fromid)
+				put(holding,chip)
+				suspend &null
+				if *holding = 2 then break
+		}
+		xdump(holding)
+
+
+		holding := sort(holding)
+		if holding[1] == "17" & holding[2] == "61" then bingo := id
+
+
+		write("BOT:",id," comparing chips, giving chip ",holding[1]," to ",
+			if type(low) == "string" then "output " else "bot ",
+			low, " giving chip ",
+			holding[2]," to ",
+			if type(high) == "string" then "output " else "bot ",
+			high)
+
+		if type(low) == "string" then
+			output[integer(low)] := holding[1]
+		else {
+			write("sending to low ",low, " ",holding[1])
+			suspend [id,holding[1]]@bots[low]
+		}
+
+		if type(high) == "string" then
+			output[integer(high)] := holding[2]
+		else {
+			write("sending to high ",high, " ",holding[2])
+			suspend [id,holding[2]]@bots[high]
+		}
+
+end

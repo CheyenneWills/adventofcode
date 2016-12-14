@@ -1,0 +1,95 @@
+link ximage
+record inst(op,p1,p2)
+procedure main(args)
+	inf := open(args[1],"r")
+	mem := []
+	regs := table()
+	regs["a"] := 0
+	regs["b"] := 0
+	regs["c"] := 1
+	regs["d"] := 0
+	IP := 1
+	ws := ' \t'
+	while line := trim(!inf) do {
+		line ? {
+			i := inst("","","")
+			i.op := tab(upto(ws))
+			tab(many(ws))
+			i.p1 := tab(0)
+			if i.op == ("jie" | "jio") then {
+				i.p1 ? {
+					operand1 := tab(upto(','))
+					=","
+					tab(many(ws))
+					operand2 := tab(0)
+				}
+				i.p1 := operand1
+				i.p2 := operand2
+			}
+			if i.op == ("cpy" | "jnz") then {
+				i.p1 ? {
+					operand1 := tab(upto(ws))
+					tab(many(ws))
+					operand2 := tab(0)
+				}
+				i.p1 := operand1
+				i.p2 := operand2
+
+				# Optimization..
+				#   If the 1st operand is an integer execute the "n" version
+				#   otherwise the 1st operand is a register so execute the "r" version
+				if integer(i.p1) then i.op := i.op || "n"
+				else i.op || "r"
+			}
+			i.p1 := integer(i.p1)
+			i.p2 := integer(i.p2)
+			put(mem,i)
+		}
+	}
+	close(inf)
+
+	every n := 1 to *mem do {
+		i := mem[i]
+		write(left(i,4)," ",left(i.op,4)," ",left(i.p1,4)," " left(i.p2,4)) )
+	}
+	write("***")
+	repeat {
+		if IP > *mem then break
+		i := mem[IP]
+		OIP := IP
+		IP +:= 1
+		#writes("IP=",left(OIP,4))
+		#writes(" OP=",left(i.op,4)," ",
+		#  		left(i.p1,4)," " left(i.p2,4)) )
+		#every r := !"abcd" do writes(" R",r," ",left(regs[r],10))
+		#writes("\r")
+		case i.op of {
+			"hlf": regs[i.p1] := integer(regs[i.p1]/2)
+			"tpl": regs[i.p1] := regs[i.p1]*3
+			"inc": regs[i.p1] +:= 1
+			"dec": regs[i.p1] -:= 1
+			"cpyr": regs[i.p2] := regs[i.p1]
+			"cpyn": regs[i.p2] := i.p1
+			"cpy": regs[i.p2] := integer(i.p1 | regs[i.p1] )
+
+			"jmp": IP := OIP + i.p1
+
+			"jnzr": if regs[i.p1] ~= 0 then
+						IP := OIP + i.p2
+			"jnzn": if i.p1 ~= 0 then
+						IP := OIP + i.p2
+
+			"jnz": if integer( i.p1 | regs[i.p1] ) ~= 0 then
+						IP := OIP + i.p2
+			"jie": if regs[i.p1] % 2 = 0 then
+						IP := OIP + i.p2
+			"jio": if regs[i.p1] = 1 then
+						IP := OIP + i.p2
+
+ 			default: break
+		}
+	}
+	write()
+	every r := !"abcd" do writes(" R",r," ",left(regs[r],10))
+	write()
+end

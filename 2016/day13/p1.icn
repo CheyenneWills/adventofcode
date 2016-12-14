@@ -1,0 +1,87 @@
+link ximage
+record POS(x,y,t)
+global MN
+global MAP
+global endx, endy,maxx, maxy
+procedure main(args)
+	MN := integer(args[1])
+	endx := integer(args[2])
+	endy := integer(args[3])
+	maxx := 9
+	maxy := 9
+	MAP := table()
+	show()
+	exit()
+	startp := POS(1,1,"O")
+	steps := search(0,[startp])
+	write(steps)
+	show()
+
+end
+
+procedure search(d,l)
+	if *l = 0 then fail
+	d +:= 1
+	newl := []
+
+	every p := !l do {
+		every np := genmoves(p) do {
+			if np.x = endx &
+			   np.y = endy then return d
+			put(newl,np)
+		}
+	}
+	return search(d,newl)
+end
+procedure genmoves(p)
+	every nextp := POS( p.x + (-1 to 1), p.y + (-1 to 1)) do {
+		maxx <:= nextp.x
+		maxy <:= nextp.y
+		if nextp.x < 0 | nextp.y < 0 then next
+
+		\MAP[nextp.x||"," || nextp.y] & next
+
+		nextp.t := decode(nextp)
+
+		MAP[nextp.x || ","|| nextp.y ] := nextp.t
+		show()
+		if nextp.t == "." then suspend {
+			MAP[nextp.x || ","|| nextp.y ] := "O"
+
+			nextp
+		}
+	}
+end
+
+procedure decode(p)
+	v := (p.x*p.x + 3*p.x + 2*p.x+p.y + p.y + p.y*p.y) + MN
+	nbits := popcount(v)
+
+	if nbits % 2 = 0 then return "#"
+	else return "."
+end
+
+procedure popcount(i)
+	i := i - iand(ishift(i,-1),16r55555555)
+	i := iand(i,16r33333333) + iand(ishift(i,-2),16r33333333)
+	return ishift(iand(i+ ishift(i,-4),16r0f0f0f0f) * 16r01010101,-24)
+end
+
+
+procedure show()
+	writes("\n  ")
+	every writes( 0 to maxx)
+	write("\n")
+	every y := 0 to maxy do {
+		writes(left(y,2))
+		every x := 0 to maxx do {
+			p := x || "," || y
+			writes( \MAP[p] | decode(POS(x,y)))
+		}
+		write()
+	}
+end
+
+procedure dpos(p)
+	write(p.x,",",p.y,":",p.t)
+end

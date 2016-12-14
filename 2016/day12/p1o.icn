@@ -1,0 +1,141 @@
+
+	record inst(op,p1,p2)
+	procedure main(args)
+		optimize := &null
+		if *args > 1 then optimize := 1
+		if \optimize then write("Optimizing..")
+		inf := open(args[1],"r")
+		mem := []
+		regs := table()
+		regs["a"] := 0
+		regs["b"] := 0
+		regs["c"] := 1
+		regs["d"] := 0
+		IP := 1
+		ws := ' \t'
+		while line := trim(!inf) do {
+			line ? {
+				i := inst("","","")
+				i.op := tab(upto(ws))
+				tab(many(ws))
+				i.p1 := tab(0)
+				if i.op == ("jie" | "jio") then {
+					i.p1 ? {
+						operand1 := tab(upto(','))
+						=","
+						tab(many(ws))
+						operand2 := tab(0)
+					}
+					i.p1 := operand1
+					i.p2 := operand2
+				}
+				if i.op == ("cpy" | "jnz") then {
+					i.p1 ? {
+						operand1 := tab(upto(ws))
+						tab(many(ws))
+						operand2 := tab(0)
+					}
+					i.p1 := operand1
+					i.p2 := operand2
+
+					if \optimize then {
+
+						# Optimization..
+						#   If the 2nd operand is an integer execute the "n" version
+						#   otherwise the 1st operand is a register so execute the "r" version
+						if integer(i.p1) then i.op ||:= "n"
+						else i.op ||:= "r"
+					}
+
+				}
+				i.p1 := integer(i.p1)
+				i.p2 := integer(i.p2)
+				put(mem,i)
+			}
+		}
+		close(inf)
+
+		if \optimize then {
+			repeat {
+				every n := 1 to *mem do {
+
+					if n < *mem -2 then {
+						#write("3 instruction optimize")
+						#write(mem[n].op," ",mem[n].p1," ",mem[n].p2)
+						#write(mem[n+1].op," ",mem[n+1].p1," ",mem[n+1].p2)
+						#write(mem[n+2].op," ",mem[n+2].p1," ",mem[n+2].p2)
+						# Look for 3 instruction patterns
+
+						if	mem[n].op == "inc" &
+				   			mem[n+1].op == "dec" &
+				   			mem[n+2].op == "jnzr" &
+				   				mem[n+1].p1 == mem[n+2].p1 &
+				   				mem[n+2].p2 = "-2" then {
+
+				   			mem[n].op := "add"
+				   			mem[n].p2 := mem[n+1].p1
+				   			mem[n+1] := inst("nop","","")
+				   			mem[n+2] := inst("nop","","")
+
+				   			break next
+				   		}
+					}
+				}
+				break
+			}
+		}
+
+
+		# Dump the program...
+		every n := 1 to *mem do {
+			i := mem[n]
+			write(left(n,4)," ",left(i.op,4)," ",left(i.p1,4)," ", left(i.p2,4))
+		}
+		write("***")
+		NIP := 1
+		repeat {
+			if IP > *mem then break
+			i := mem[IP]
+
+			NIP := IP +1
+
+
+			case i.op of {
+				"hlf": regs[i.p1] := integer(regs[i.p1]/2)
+				"tpl": regs[i.p1] := regs[i.p1]*3
+				"inc": regs[i.p1] +:= 1
+				"dec": regs[i.p1] -:= 1
+
+				"add": regs[i.p1] +:= regs[i.p2]
+
+				"cpyr": regs[i.p2] := regs[i.p1]
+				"cpyn": regs[i.p2] := i.p1
+				"cpy": regs[i.p2] := integer(i.p1 | regs[i.p1] )
+
+				"jmp": NIP := IP + i.p1
+
+				"jnzr": if regs[i.p1] ~= 0 then	NIP := IP + i.p2
+				"jnzn": if i.p1 ~= 0 then NIP := IP + i.p2
+				"jnz": if integer( i.p1 | regs[i.p1] ) ~= 0 then NIP := IP + i.p2
+
+				"jie": if regs[i.p1] % 2 = 0 then NIP := IP + i.p2
+				"jio": if regs[i.p1] = 1 then NIP := IP + i.p2
+
+				"nop": &null
+	 			default: break
+			}
+
+
+			#writes(left(IP,4))
+			#writes(" ",left(i.op,4)," ",
+			#  		left(i.p1,4)," ",left(i.p2,4))
+			#writes(" NIP ",left(NIP,4))
+			#every r := !"abcd" do writes(" R",r," ",left(regs[r],10))
+			#writes("\n")
+
+			IP := NIP
+		}
+		write()
+		every r := !"abcd" do writes(" R",r," ",left(regs[r],10))
+		write()
+	end
