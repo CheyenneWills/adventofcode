@@ -1,0 +1,26 @@
+
+link hexcvt
+procedure main(args)
+        v := args[1]
+        index := 3231920
+        pw := "________"
+        repeat {
+                h := right(hexstring(MD5(v || index)),32,"0")
+                if match("00000",h) then {
+                        p := h[6]
+                        c := h[7]
+                        if "0" <<= p <<= "7" then {
+                                p := integer(p)+1
+                                if pw[p] == "_" then {
+                                        pw[p+1] := c
+                                        writes("\n",pw,"\n")
+                                }
+
+                                if not find('_',pw) then break
+                        }
+                }
+                writes("\r",v || index," ",h," ",pw)
+                index +:= 1
+        }
+        write("\n",pw)
+end

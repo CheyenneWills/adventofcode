@@ -2,19 +2,18 @@ link ximage
 record POS(x,y,t)
 global MN
 global MAP
-global endx, endy,maxx, maxy
+global locs
 procedure main(args)
 	MN := integer(args[1])
-	endx := integer(args[2])
-	endy := integer(args[3])
-	maxx := 9
-	maxy := 9
+
+	locs := 0
+
 	MAP := table()
 
 	startp := POS(1,1,"O")
 	steps := search(0,[startp])
-	write(steps)
-	show()
+	write(locs)
+
 
 end
 
@@ -25,18 +24,16 @@ procedure search(d,l)
 
 	every p := !l do {
 		every np := genmoves(p) do {
-			if np.x = endx &
-			   np.y = endy then return d
 			put(newl,np)
 		}
 	}
-	return search(d,newl)
+	if d = 50 then return
+	else return search(d,newl)
 end
 procedure genmoves(p)
 	every a := ![ [1,0],[-1,0],[0,1],[0,-1]] do {
 		nextp := POS( p.x + a[1], p.y + a[2])
-		maxx <:= nextp.x
-		maxy <:= nextp.y
+
 		if nextp.x < 0 | nextp.y < 0 then next
 
 		\MAP[nextp.x||"," || nextp.y] & next
@@ -46,6 +43,8 @@ procedure genmoves(p)
 		MAP[nextp.x || ","|| nextp.y ] := nextp.t
 
 		if nextp.t == "." then suspend {
+			if MAP[nextp.x || "," || nextp.y] == "." then locs +:= 1
+
 			MAP[nextp.x || ","|| nextp.y ] := "O"
 
 			nextp
@@ -67,22 +66,4 @@ procedure popcount(x)
     x := x + ishift(x,-8)
     x := x + ishift(x,-16)
     return iand( x, 16r0000003f)
-end
-
-procedure show()
-	writes("\n  ")
-	every writes( 0 to maxx)
-	write()
-	every y := 0 to maxy do {
-		writes(left(y,2))
-		every x := 0 to maxx do {
-			p := x || "," || y
-			writes( \MAP[p] | decode(POS(x,y)))
-		}
-		write()
-	}
-end
-
-procedure dpos(p)
-	write(p.x,",",p.y,":",p.t)
 end
