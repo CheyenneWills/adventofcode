@@ -1,0 +1,6 @@
+procedure main(args)
+    # Josephus problem
+    n := args[1]
+    write ( 2 * (n-2^integer(log(n,2))) + 1)
+end
+

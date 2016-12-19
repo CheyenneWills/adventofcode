@@ -1,0 +1,27 @@
+link ximage
+
+procedure main(args)
+    # Josephus problem
+    every n:= 1 to 500 do {
+        p := integer(log(n,3))
+        t := 3^p
+        writes("n=",n,
+               " t=3^",p," = ",t,
+               " ",n," mod 3^",p," = ", n%t," int(",n,"/",t,")=",integer(n/t))
+
+        x := (integer(n/t) * t) + (n % t) - 1
+        writes(" x=",x)
+
+
+        if n = t then write(" ans=",n," form n")
+        else {
+            nmt := n - t
+            x := 2*n - 3*t
+            if nmt > x then write(" ans=",nmt," form n-t")
+            else write(" ans=",x," form 2*n - 3*t")
+        }
+
+
+
+}
+end
