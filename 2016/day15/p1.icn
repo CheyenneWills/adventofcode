@@ -1,0 +1,57 @@
+link ximage
+link scan
+link numbers
+procedure main(args)
+
+
+
+	inf := open(args[1],"r")
+	disc_slots := []
+	disc_start := []
+	while line := read(inf) do {
+		line ? {
+			tab(find("has"))
+			="has"
+			tab(upto(&digits))
+			slots := integer(tab(many(&digits)))
+			tab(upto("="))
+			="="
+			inittime := integer(tab(many(&digits)))
+			tab(find("position"))
+			tab(upto(&digits))
+
+			startpos := integer(tab(many(&digits)))
+			put(disc_slots,slots)
+			put(disc_start,(startpos + *disc_start+1) % slots)
+
+
+		}
+	}
+	close(inf)
+	every i := 1 to *disc_slots do
+		write(disc_slots[i]," ",disc_start[i])
+	xdump(disc_slots,disc_start)
+	write(CRT(disc_slots,disc_start))
+end
+
+procedure CRT(n,a)
+
+	N := 1
+	every N *:= !n
+
+	x := 0
+	every i := 1 to *a do {
+		p := N / n[i]
+		x +:= a[i] * mul_inv(p,n[i]) * p
+	}
+	return x%N
+end
+procedure mul_inv(a,b)
+    if b = 1 then return 1
+    (b0 := b, x0 := 0, x1 := 1)
+    while q := (1 < a)/b do {
+        (t := a, a := b, b := t%b)
+        (t := x0, x0 := x1-q*t, x1 := t)
+        }
+    return if x1 < 0 then x1+b0 else x1
+end

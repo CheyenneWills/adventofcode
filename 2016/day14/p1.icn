@@ -1,0 +1,71 @@
+link ximage
+global md5sum
+procedure main(args)
+	md5sum := loadfunc("../md5sum.so","MD5sum")
+	salt := args[1]
+	index := 0
+	md5keys := []
+	pending := []
+
+	repeat {
+		h := salt || index
+		every 1 to 2017 do
+			h := md5sumstr(h)
+		md5 := h
+		writes(right(index,10)," ",md5," ",right(*md5keys,10)," ",right(*pending,10),"\r")
+		chars := cset(md5)
+		first := *md5
+
+		every c := !chars do {
+			s := repl(c,3)
+
+			n := find(s,md5) | next
+			if n < first then {
+				s5 := repl(c,5)
+				first := n
+			}
+
+		}
+
+		if first < *md5 then {
+			put(pending,[index,s5])
+
+		}
+		dels := set()
+		every p := !pending do {
+			if p[1] = index then next
+			if p[1] < index - 1000 then {
+				insert(dels,p)
+				next
+			}
+			if find(p[2],md5) then {
+
+				insert(dels,p)
+				put(md5keys,[p,index])
+				if *md5keys = 64 then break break
+			}
+		}
+		npending := []
+		every p := !pending do {
+			if not member(dels,p) then put(npending,p)
+		}
+		pending := npending
+		index +:= 1
+	}
+	write()
+	write(md5keys[-1][1][1])
+	#xdump(md5keys)
+end
+
+procedure md5sumstr(s)
+	static hexchars
+	initial {
+		hexchars := "0123456789abcdef"
+	}
+	o := ""
+	m := md5sum(s)
+	every c := ord(!m) do {
+		o ||:= hexchars[ iand(ishift(c,-4),16r0f) + 1] || hexchars[ iand(c,16r0f) + 1]
+	}
+	return o
+end
