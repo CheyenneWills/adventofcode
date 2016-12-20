@@ -1,4 +1,4 @@
-link ximage
+
 record POS(x,y,t)
 global MN
 global MAP
