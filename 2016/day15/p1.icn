@@ -1,15 +1,14 @@
-link ximage
-link scan
+
 link numbers
 procedure main(args)
-
-
 
 	inf := open(args[1],"r")
 	disc_slots := []
 	disc_start := []
 	while line := read(inf) do {
 		line ? {
+			tab(upto(&digits))
+			discnum := integer(tab(many(&digits)))
 			tab(find("has"))
 			="has"
 			tab(upto(&digits))
@@ -22,15 +21,17 @@ procedure main(args)
 
 			startpos := integer(tab(many(&digits)))
 			put(disc_slots,slots)
-			put(disc_start,(startpos + *disc_start+1) % slots)
-
-
+			put(disc_start,   slots - (startpos + discnum) % slots)
 		}
 	}
+
 	close(inf)
-	every i := 1 to *disc_slots do
-		write(disc_slots[i]," ",disc_start[i])
-	xdump(disc_slots,disc_start)
+
+	write(CRT(disc_slots,disc_start))
+
+	# Part 2.  Disc is added at t=1 and will move at t=2, so subtract number of previous discs-3
+	put(disc_slots,11)
+	put(disc_start, *disc_slots - 3)
 	write(CRT(disc_slots,disc_start))
 end
 
