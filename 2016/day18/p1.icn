@@ -1,0 +1,31 @@
+procedure main(args)
+    inf := open(args[1],"r")
+    nrows := integer(args[2])
+
+    curline := read(inf)
+    close(inf)
+
+    safecount := 0
+    mtline := repl(".",*curline)
+    every 1 to nrows do {
+        every c := !curline do if c == "." then safecount +:= 1
+        #write(curline," ",safecount)
+        newline := mtline
+        ("." || curline || ".") ? {
+            move(1)
+            while not pos(*&subject) do {
+
+                move(-1)
+                if match("^^."|
+                         ".^^"|
+                         "^.."|
+                         "..^") then newline[&pos]:= "^"
+
+                move(2)
+            }
+        }
+        curline := newline
+    }
+    write(safecount)
+end
+link scan

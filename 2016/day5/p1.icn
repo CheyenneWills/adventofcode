@@ -1,27 +1,16 @@
 
 link hexcvt
 procedure main(args)
-	v := args[1]
-	index := 3231929
-	pw := "________"
-	repeat {
-		h := right(hexstring(MD5(v || index)),32,"0")
-		write(h)
-		if match("00000",h) then {
-			p := h[6]
-			c := h[7]
-			if "0" <<= p <<= "7" then {
-				p := integer(p)+1
-				if pw[p] == "_" then {
-					pw[p+1] := c
-					writes("\n",pw,"\n")
-				}
-
-				if not find('_',pw) then break
-			}
-		}
-		writes("\r",v || index," ",h," ",pw)
-		index +:= 1
-	}
-	write("\n",pw)
+        v := args[1]
+        index := 0
+        pw := ""
+        while *pw < 8 do {
+                h := right(hexstring(MD5(v || index)),32,"0")
+             #  writes("\r",pw," ",index," ",h)
+                if match("00000",h) then {
+                    pw ||:= h[6]
+                }
+                index +:= 1
+        }
+        write("\n",pw)
 end

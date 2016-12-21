@@ -1,0 +1,66 @@
+global md5sum
+global shortest
+procedure main(args)
+    md5sum := loadfunc("../md5sum.so","MD5sum")
+    in := args[1]
+    shortest := &null
+    l := []
+    every put(l,search(in,1,0))
+    write(l[-1][*in+1:0])
+
+end
+
+procedure search(p,loc,d)
+    if \shortest & *p > shortest then fail
+    if loc = 16 then {
+        /shortest := *p
+        shortest >:= *p
+        return p
+    }
+    every new := genmoves(p,loc) do {
+        suspend search(p || new[1],new[2],d+1)
+    }
+end
+
+procedure genmoves(p,loc)
+    static dooropen
+    static cache
+    static grid
+    initial {
+        dooropen := "UDLR"
+        cache := table()
+        # ####
+        # 1234 #
+        # 5678 #
+        # 9012 #
+        # 3456 #
+        # ####
+        grid := [
+                [&null, 5,&null, 2],[&null, 6, 1, 3],[&null, 7,  2, 4],[&null, 8, 3,&null],
+                [ 1,    9,&null, 6],[ 2,   10, 5, 7],[ 3,   11,  6, 8],[4,    12, 7,&null],
+                [ 5,   13,&null,10],[ 6,   14, 9,11],[ 7,   15, 10,12],[8,    16,11,&null],
+                [ 9,&null,&null,14],[10,&null,13,15],[11,&null, 14,16],[12,&null,15,&null]
+            ]
+    }
+
+    /cache[p] := md5sumstr(p)[1:5]
+    hash := cache[p]
+    every i := 1 to *hash do {
+        if any('bcdef',hash[i]) & \grid[loc][i] then
+            suspend [dooropen[i],grid[loc][i]]
+    }
+
+end
+
+procedure md5sumstr(s)
+    static hexchars
+    initial {
+        hexchars := "0123456789abcdef"
+    }
+    o := ""
+    m := md5sum(s)
+    every c := ord(!m) do {
+        o ||:= hexchars[ iand(ishift(c,-4),16r0f) + 1] || hexchars[ iand(c,16r0f) + 1]
+    }
+    return o
+end

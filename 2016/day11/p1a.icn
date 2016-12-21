@@ -1,4 +1,4 @@
-link ximage
+
 global items,I
 global seen_states
 procedure main(args)
@@ -15,7 +15,7 @@ procedure main(args)
                 "di"
         ])
 
-xdump(I)
+
         part1_floors := [
 
                         I["pog"] ++ I["thg"] ++ I["thm"] ++ I["prg"] ++
@@ -92,10 +92,12 @@ procedure search(statel,step)
                         else insert(seen_states,State_str(new[1],newstate))
 
                         if isValid(newstate) then {
+
                                 put(newstates,[new[1],newstate,i])
-                                if Done(newstate) then {
+
+                                if Done(newstate) then
                                         return [newstate,step+1]
-                                }
+
                         }
                 }
         }
@@ -163,11 +165,6 @@ end
 procedure isValid(s)
         # Uppercase are chips
         # Lowercase are rtgs
-        #    Aa - okay       - chips = A,  rtgs = a, unsafe = ''
-        #    AB - okay       - chips = AB, rtgs = '', unsafe = ''
-        #    Ab - bad        - chips = A,  rtgs = b, unsafe = 'b'
-        #    ab - okay
-        #    Aab - bad
         every f := !s do {
                 chips := f ** &ucase
                 rtgs  := f ** &lcase

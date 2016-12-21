@@ -1,0 +1,23 @@
+procedure main(args)
+    inf := open(args[1],"r")
+    nrows := integer(args[2])
+
+    curline := read(inf)
+    close(inf)
+
+    safecount := nrows * *curline
+    every c := !curline do
+        if c == "^" then safecount -:= 1
+
+    mtline := repl(".",*curline)
+    every 1 to nrows-1 do {
+        newline := mtline
+        every newline[ find("^^."|".^^"|"^.."|"..^",
+                            "." || curline || ".") ] := "^" do s
+            safecount -:= 1
+
+        curline := newline
+    }
+    write(safecount)
+end
+link scan
