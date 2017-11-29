@@ -1,0 +1,32 @@
+
+record iprange(low,high)
+
+procedure main()
+
+    inf := open("input.txt","r")
+    rules := []
+
+    while line := trim(read(inf)) do {
+        line ? {
+            low := integer(tab(many(&digits)))
+            ="-"
+            high := integer(tab(many(&digits) | 0))
+        }
+        if low > high then low :=: high
+        put(rules,iprange(low,high))
+    }
+
+    rules := sortf(rules,1)
+
+    # Merge adjacent rules    
+    nrules := [get(rules)]
+    every r := !rules do {
+        if nrules[-1].high >= r.low-1 then {
+            nrules[-1].high <:= r.high 
+        }
+        else put(nrules,r)
+    }
+    if nrules[1].low == 0 then get(nrules)
+    write(nrules[1].low - 1)
+    
+end
