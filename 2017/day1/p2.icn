@@ -1,0 +1,7 @@
+procedure main(args)
+    s := args[1] | read(open("input.txt","r"))
+    sum := 0
+    step := *s/2
+    every sum +:= ((c := s[i := 1 to *s]) & c == s[ (i+step-1) % *s +1 ])
+    write(sum)
+end
