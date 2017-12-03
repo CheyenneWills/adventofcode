@@ -1,0 +1,16 @@
+procedure main(args)
+
+    input := open("input.txt","r")
+    checksum := 0
+    every row := !input do {
+        min := max := &null
+        row ? while tab(upto(&digits)) do {
+            v := /min := /max := tab(many(&digits))
+            min >:= v
+            max <:= v
+        }
+        checksum +:= max-min
+    }
+    write(checksum)
+
+end
