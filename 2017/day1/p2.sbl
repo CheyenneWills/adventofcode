@@ -1,0 +1,19 @@
+* Function definitions
+
+    define('innerpat(p,c,s)n') :(innerpatend)
+innerpat
+    step = size(s) / 2
+    s ? tab( remdr(p + step - 1 , size(s)) ) len(1) . n :f(freturn)
+    innerpat = n
+    sum = ident(+c,+n) sum + c              :(return)
+innerpatend
+
+* Start main line
+    input(.in,1,'input.txt[-L5000]')
+    sum = 0
+    s = in  
+    pat = fence arb len(1) $ c @p  *innerpat(p,c,s) rpos(0) 
+   
+loop s ? succeed pat fail   :s(loop)
+    terminal = sum
+end
