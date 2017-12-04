@@ -1,0 +1,17 @@
+* Handy patterns
+    bl = span(' ') | ''
+    chars = &alphabet
+    chars ' ' =
+* Start main line
+    input(.in,1,'input.txt[-L5000]')
+    good = 0
+read line = in                      :f(eof)
+     words = table()
+loop line bl span(chars) . w  =     :f(eol)
+    ident(words[w])                 :f(read) 
+    words[w] = 1                    :(loop)
+eol 
+    good = good + 1                 :(read)
+eof terminal = good
+    
+end

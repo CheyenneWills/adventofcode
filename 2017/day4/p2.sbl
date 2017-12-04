@@ -1,0 +1,35 @@
+* Handy patterns
+    bl = span(' ') | ''
+    chars = &alphabet
+    chars ' ' =
+* Function definitions
+    define('cset(s)t,x,c')  :(cset_end)
+cset
+    t = table()
+cloop s len(1) . c =                :f(cloopend)
+    t[c] = 1                        :(cloop)
+cloopend
+    c = ''
+    t = sort(t)
+    x = 0
+cloop2 x = x + 1
+    c = c t[x,1]                    :s(cloop2)
+cloop2end
+    cset = c                        :(return)
+cset_end
+
+* Start main line
+    input(.in,1,'input.txt[-L5000]')
+    good = 0
+    &ftrace = 100
+read line = in                      :f(eof)
+     words = table()
+loop line bl span(chars) . w  =     :f(eol)
+    w = cset(w)
+    ident(words[w])                 :f(read) 
+    words[w] = 1                    :(loop)
+eol 
+    good = good + 1                 :(read)
+eof terminal = good
+    
+end
