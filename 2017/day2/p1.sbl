@@ -1,0 +1,22 @@
+
+* Define some handy patterns
+    digits = '0123456789'
+    minmax = 
+
+
+* Start main line
+    input(.in,1,'input.txt[-L5000]')
+    checksum = 0
+read  line = in         :f(eof)
+    min = ''
+    max = ''
+getv line ? breakx(digits) span(digits) . v :f(eol)
+    max = ident(max) v
+    min = ident(min) v
+    max = gt(v,max) v
+    min = lt(v,min) v               :(getv)
+    
+eol checksum = checksum + max - min :(read)
+eof terminal = checksum
+end
+

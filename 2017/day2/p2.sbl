@@ -1,0 +1,35 @@
+* Define functions
+    define('divisable(a,b)')       :(end_divisable)
+divisable
+    divisable = gt(a,b) remdr(a,b) :s(return)
+    divisable = remdr(b,a)         :(return)
+end_divisable
+    define('div(a,b)')             :(end_div)
+div
+    div = gt(a,b) a / b            :s(return)
+    div = b / a                    :(return)
+end_div
+
+
+* Define some handy patterns
+    digits = '0123456789'
+
+* Start main line
+    input(.in,1,'input.txt[-L5000]')
+    checksum = 0
+   
+read  line = in         :f(eof)
+    rowl = ''
+    n = 0
+getv line ? tab(n) breakx(digits) span(digits) . v @n    :f(eol)
+
+    cr = 0
+checkrow rowl ? tab(cr) span(digits) . c 
++               (',' | rpos(0)) @cr                      :f(done)
+    checksum = eq(0,divisable(v,c)) checksum + div(v,c)  :f(checkrow)
+    
+done rowl =  rowl v ','             :(getv)
+
+eol                         :(read)
+eof terminal = checksum
+end
