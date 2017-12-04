@@ -26,7 +26,7 @@ procedure main()
         }
         else put(nrules,r)
     }
-    if nrules[1].low == 0 then nips := nrules[1].low - 1
+    if nrules[1].low ~== 0 then nips := nrules[1].low - 1
     else nips := 0
     
     blc := 0

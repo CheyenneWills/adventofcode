@@ -1,0 +1,16 @@
+procedure main(args)
+    s := open("input.txt","r")
+    good := 0
+    every line := !s do {
+        words := set()
+        line ? while not pos(0) do {
+            w := tab(upto(' \t') | 0)
+            if member(words,w) then break next
+            insert(words,w)
+            tab(many(' \t'))
+        }
+        good +:= 1
+    }
+    write(good)
+
+end
