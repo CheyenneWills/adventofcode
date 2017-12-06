@@ -1,0 +1,20 @@
+* Start main line
+    input(.in,1,'input.txt')
+    i = 0
+rdloop1 l = in                  :f(erdloop1)
+    i = i + 1                   :(rdloop1)
+erdloop1 rewind(1)
+    
+    jumps = array('0:' i - 1)
+    i = 0
+rdloop2 jumps[i] = in           :f(erdloop2)
+    i = i + 1                   :(rdloop2)
+erdloop2
+    
+    c = 0
+    p = 0
+procloop np = p + jumps[p]      :f(done)
+    jumps[p] = jumps[p] + 1
+    p = np ; c = c + 1          :(procloop)
+done terminal = c
+end

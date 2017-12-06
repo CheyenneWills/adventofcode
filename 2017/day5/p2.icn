@@ -1,0 +1,17 @@
+procedure main(args)
+    s := open("input.txt","r")
+    jumps := []
+    every put(jumps,!s)
+    p := 0
+    c := 0
+    while 0 <= p < *jumps do {
+        np := p + jumps[p+1]
+        if jumps[p+1] < 3 then 
+            jumps[p+1] +:= 1
+        else
+            jumps[p+1] -:= 1
+        c +:= 1
+        p := np
+    }
+    write(c)
+end
