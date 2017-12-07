@@ -1,0 +1,59 @@
+* 
+
+    digits = '0123456789'
+    data('bank(next,value)')
+
+    define('bankstate()cp,s')                   :(bankstate_end)
+bankstate
+    cp = head
+    s = ''
+bsloop  s = s (differ(s) ',','') value(cp) 
+    cp = next(cp)
+    ident(cp,head)                              :f(bsloop)
+    bankstate = s                               :(return)
+bankstate_end
+
+* Start main line
+    input(.in,1,'input.txt')
+    head = 
+    tail = 
+    line = in
+* parse the input
+l   line ? breakx(digits) span(digits) . i =    :f(l_end)
+    head = ident(head) bank()                   :f(notfirst)
+    value(head) = i
+    next(head) = head
+    maxbank = head
+    tail = head                                 :(l)
+notfirst
+    next(tail) = bank(next(tail),i)
+    tail = next(tail)                           
+    maxbank = lt(value(maxbank),value(tail)) tail  :(l) 
+l_end
+
+    states = table()
+    steps = 0
+    s = bankstate()
+loop cur = maxbank
+    states[s] = steps
+    blks = value(cur)
+    value(cur) = 0
+    steps = steps + 1
+   
+redist gt(blks,0)                                :f(redist_end)
+    cur = next(cur)
+    value(cur) = value(cur) + 1
+    blks = blks - 1                              :(redist)
+
+redist_end 
+
+    maxbank = head
+    cur = head
+findmax maxbank = gt(value(cur),value(maxbank)) cur
+    cur = differ(head,next(cur)) next(cur)      :s(findmax)
+    
+    s = bankstate()
+    states[s] = ident(states[s]) steps          :s(loop)
+
+    terminal = 'part1 = ' steps ' part2 = ' steps - states[bankstate()]
+end

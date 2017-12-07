@@ -1,0 +1,25 @@
+
+procedure main(args)
+
+    input := open("input.txt","r")
+    
+    every row := !input do {
+        row ? while tab(upto(&lcase ++ &ucase)) do {
+            node := tab(upto(' '))
+            tab(many(' '))
+            ="("
+            weight := tab(upto(')'))
+            =")"
+            tab(many(' '))
+            ="->"
+            tab(many(' '))
+            childs := 
+            /min := /max := v
+            min >:= v
+            max <:= v
+        }
+        checksum +:= max-min
+    }
+    write(checksum)
+
+end

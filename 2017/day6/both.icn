@@ -1,0 +1,56 @@
+record bank(n,v)
+
+procedure main(args)
+    s := read(open("input.txt","r"))
+    head := &null
+    tail := &null
+    
+    s ? while i := tab(many(&digits)) do {
+        if /head then {
+            head := bank(&null,i)
+            head.n := head
+            tail := head
+            maxbank := head
+        } else {
+            tail.n := bank(tail.n,i)
+            tail := tail.n
+        }
+        if maxbank.v < tail.v then maxbank := tail    
+        tab(many(' \t'))
+    }
+    states := table()
+    states[bankstate(head)] := 1
+    steps := 0
+    repeat {
+        
+        cur := maxbank
+        blks := cur.v
+        cur.v := 0
+        steps +:= 1
+        while blks > 0 do {
+            cur := cur.n
+            cur.v +:= 1
+            blks -:= 1
+        }
+        maxbank := head
+        cur := head
+        repeat {
+            if cur.v > maxbank.v then maxbank := cur
+            cur := cur.n
+            if cur === head then break
+        }
+        s := bankstate(head)
+        if \states[s] then break
+        states[s] := steps
+    }
+    write("part1 = ",steps,", part2 = ", steps - states[bankstate(head)])
+end
+procedure bankstate(h)
+    cp := h
+    s := ""
+    repeat {
+        s ||:= cp.v || ","
+        cp := cp.n
+        if cp === h then return s[1:-1]
+    }
+end
