@@ -1,6 +1,20 @@
 link ximage
 record inst(op,p1,p2)
 procedure main(args)
+	opstbl := table()
+	opstbl[">"] := proc(">",2)
+	opstbl["<"] := proc("<",2)
+	opstbl[">="] := proc(">=",2)
+	opstbl["<="] := proc("<=",2)
+	opstbl["=="] := proc("=",2)
+	opstbl["!="] := proc("~=",2)
+	opstbl["inc"] := proc("+",2)
+	opstbl["dec"] := proc("-",2)
+	
+
+
+
+
 	inf := open(args[1],"r")
 	mem := []
 	regs := table(0)
@@ -8,6 +22,7 @@ procedure main(args)
 	IP := 1
 	ws := ' \t'
 	while line := trim(!inf) do {
+		xdump(regs)
 		every k := key(regs) do {
 			/maxreg := regs[k]
 			maxreg <:= regs[k]
@@ -15,7 +30,7 @@ procedure main(args)
 		line ? {
 			reg := tab(upto(ws))
 			tab(many(ws))
-			op  := tab(upto(ws))
+			op  := opstbl[tab(upto(ws))] | stop("Invalid op")
 			tab(many(ws))
 			val := integer(tab(upto(ws)))
 			tab(many(ws))
@@ -23,21 +38,15 @@ procedure main(args)
 			tab(many(ws))
 			condreg := tab(upto(ws))
 			tab(many(ws))
-			condop := tab(upto(ws))
+			condop := opstbl[tab(upto(ws))] | stop("Invalid op")
 			tab(many(ws))
 			condval := integer(tab(upto(ws)|0))
 		}
-		case condop of {
-			">":	if not (regs[condreg] > condval) then next
-			"<":	if not (regs[condreg] < condval) then next
-			">=":	if not (regs[condreg] >= condval) then next
-			"<=":	if not (regs[condreg] <= condval) then next
-			"==":	if not (regs[condreg] = condval) then next
-			"!=":	if not (regs[condreg] ~= condval) then next
-		}
-		if op == "inc" then regs[reg] +:= val
-		else regs[reg] -:= val
+
+		condop(regs[condreg],condval) & regs[reg] := op(regs[reg],val)
+
 	}
+	xdump(regs)
 	close(inf)
 	max := &null
 	every k := key(regs) do {
