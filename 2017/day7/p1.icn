@@ -1,25 +1,94 @@
 
+record disc(dname,weight,parent,childlist,childweight,balanced)
+global nodes
 procedure main(args)
 
     input := open("input.txt","r")
-    
+    nodes := table()
     every row := !input do {
-        row ? while tab(upto(&lcase ++ &ucase)) do {
-            node := tab(upto(' '))
+        row ? { 
+            tab(many(' '))
+            dname := tab(upto(' '))
             tab(many(' '))
             ="("
-            weight := tab(upto(')'))
+            weight := integer(tab(upto(')')))
             =")"
             tab(many(' '))
             ="->"
             tab(many(' '))
-            childs := 
-            /min := /max := v
-            min >:= v
-            max <:= v
+            nodes[dname] := disc(dname,weight,&null,[],0)
+            while not pos(0) do {
+                push(nodes[dname].childlist,tab(upto(' ,')|0))
+                tab(many(' ,'))
+            }
         }
-        checksum +:= max-min
     }
-    write(checksum)
+    nodelist := sort(nodes)
+    every node := !nodelist do {
+        nname := node[1]
+        d := node[2]
+        every i := 1 to *d.childlist do {
+            d.childlist[i] := nodes[d.childlist[i]]
+            d.childlist[i].parent := d
+        }
+    }
+    every node := !nodelist do {
+        if /node[2].parent then {
+            write("part1 -> ",node[1])
+            top := node[2]
+            break
+        }
+    }
+    ### part 2
+    write()
+    getweight(top)
+    #every node := !nodelist do {
+    #    prtnode(node[2])
+    #}
+end
 
+procedure prtnode(node)
+    writes(node.dname,
+            (/node.balanced & " balanced ") | "",
+            " weight=",node.weight,
+            " tweight=", node.weight + node.childweight,
+            " childweights=",node.childweight,
+            " -> ")
+    comma := ""
+    every c := !node.childlist do {
+        writes(comma,c.dname," (",c.weight,",",c.childweight,")")
+        comma := ", "
+    }
+    write()
+end
+
+procedure getweight(n)
+    
+    if *n.childlist = 0 then 
+        return n.weight
+    else {
+        n.childweight := 0
+        wt := table(0)
+        every cw := getweight(!n.childlist) do {
+            n.childweight +:= cw
+            wt[cw] +:= 1
+        }
+        if *wt = 1 then {
+            n.balanced := 1
+        }
+        else {
+            wt := sort(wt)
+            # Find the odd node..
+            oddweight := !wt & oddweight[2] = 1  
+            commonweight := !wt & commonweight[2] ~= 1   
+            c := !n.childlist & c.weight + c.childweight = oddweight[1] & \c.balanced & {
+                write(commonweight[1]," ",oddweight[1])
+                writes("oddball= ")
+                prtnode(c)   
+                adjust := c.weight + (commonweight[1] - oddweight[1])
+                write("part2 -> adjust=",adjust)
+            }
+        }
+    }
+    return n.childweight + n.weight
 end

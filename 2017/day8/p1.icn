@@ -1,0 +1,49 @@
+link ximage
+record inst(op,p1,p2)
+procedure main(args)
+	inf := open(args[1],"r")
+	mem := []
+	regs := table(0)
+	
+	IP := 1
+	ws := ' \t'
+	while line := trim(!inf) do {
+		every k := key(regs) do {
+			/maxreg := regs[k]
+			maxreg <:= regs[k]
+		}
+		line ? {
+			reg := tab(upto(ws))
+			tab(many(ws))
+			op  := tab(upto(ws))
+			tab(many(ws))
+			val := integer(tab(upto(ws)))
+			tab(many(ws))
+			="if"
+			tab(many(ws))
+			condreg := tab(upto(ws))
+			tab(many(ws))
+			condop := tab(upto(ws))
+			tab(many(ws))
+			condval := integer(tab(upto(ws)|0))
+		}
+		case condop of {
+			">":	if not (regs[condreg] > condval) then next
+			"<":	if not (regs[condreg] < condval) then next
+			">=":	if not (regs[condreg] >= condval) then next
+			"<=":	if not (regs[condreg] <= condval) then next
+			"==":	if not (regs[condreg] = condval) then next
+			"!=":	if not (regs[condreg] ~= condval) then next
+		}
+		if op == "inc" then regs[reg] +:= val
+		else regs[reg] -:= val
+	}
+	close(inf)
+	max := &null
+	every k := key(regs) do {
+		/max := regs[k]
+		max <:= regs[k]
+	}
+	write(max)
+	write(max < maxreg | max)
+end
