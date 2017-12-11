@@ -11,10 +11,6 @@ procedure main(args)
 	opstbl["inc"] := proc("+",2)
 	opstbl["dec"] := proc("-",2)
 	
-
-
-
-
 	inf := open(args[1],"r")
 	mem := []
 	regs := table(0)
