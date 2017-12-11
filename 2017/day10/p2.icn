@@ -1,0 +1,46 @@
+link ximage
+procedure main(args)
+L := []
+every put(L,0 to 255)
+
+
+inf := open(args[1],"r")
+s := read(inf)
+lengths := []
+every put(lengths,ord(!s))
+lengths |||:= [17,31,73,47,23]
+
+cur := 0
+skip := 0
+every 1 to 64 do {
+    every l := !lengths do {
+        every x := 1 to integer(l/2) do 
+            L[((cur+x-1) % *L)+1] :=: L[ ((cur+l-x) % *L)+1]
+        cur +:= l + skip
+        skip +:= 1
+    }
+}
+
+densehash := list(16)
+every i := 1 to *L do {
+
+        if (i-1) % 16 = 0 then 
+            densehash[ integer((i-1)/16) + 1] := L[i]
+        else
+            densehash[integer((i-1)/16) + 1] := ixor(densehash[integer((i-1)/16)+1],L[i])
+        
+}
+every writes(hexstr(!densehash))
+write()
+
+end
+
+procedure hexstr(n)
+    s := ""
+    m := ishift(1,4) - 1
+    while n ~= 0 & n ~= -1 do {
+        s := "0123456789abcdef" [ 1 + iand(n,m)] || s
+        n := ishift(n,-4)
+    }
+    return s
+end

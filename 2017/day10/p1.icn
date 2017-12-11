@@ -1,0 +1,21 @@
+procedure main(args)
+L := []
+every put(L,0 to 255)
+
+inf := open(args[1],"r")
+s := read(inf)
+lengths := []
+s ? while tab(upto(&digits)) do 
+    put(lengths,integer(tab(many(&digits))))
+
+cur := 0
+skip := 0
+
+every l := !lengths do {
+    every x := 1 to integer(l/2) do 
+        L[((cur+x-1) % *L)+1] :=: L[ ((cur+l-x) % *L)+1]
+    cur +:= l + skip
+    skip +:= 1
+}
+write(L[1] * L[2])
+end
