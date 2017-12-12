@@ -1,0 +1,54 @@
+link ximage
+
+record NODE(this,connections)
+
+procedure main(args)
+
+    inf := open(args[1],"r")
+
+    nodes := table()
+
+    every line := !inf do {
+        line ? {
+            n := tab(upto(' '))
+            /nodes[n] := NODE(n,set([]))
+            tab(many(' '))
+            ="<->"
+            tab(many(' '))
+            while not pos(0) do {
+                c := tab(upto(' ,') | 0)
+                /nodes[c] := NODE(n,set([]))
+                insert(nodes[n].connections,nodes[c])
+                insert(nodes[c].connections,nodes[n])
+                tab(many(' ,'))
+            }
+
+        }
+    }
+    # Part 1
+    groups := table()
+    groups["0"] := set()
+    visit(nodes["0"],groups["0"])
+    write(*groups["0"])
+
+    # Part 2
+    inagroup := set()
+    inagroup ++:= groups["0"]
+    every g := key(nodes) do {
+        if member(inagroup,nodes[g]) then next
+        /groups[g] := set()
+        visit(nodes[g],groups[g])
+        inagroup ++:= groups[g]
+    }
+    write(*groups)
+end
+
+procedure visit(n,g)
+    if member(g,n) then return
+    insert(g,n)
+    every c := !n.connections do {
+        visit(c,g)
+    }
+
+
+end
