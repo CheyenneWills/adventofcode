@@ -1,0 +1,35 @@
+# See www.redblobgames.com/grids/hexagons...
+# Use cube coordinates...
+record dir(x,y,z)
+procedure main(args)
+    dirmap := table()
+    # Distance in the 6 possible directions
+    # (totals must add up to 0)
+    dirmap["n"]  := dir(0,1,-1)
+    dirmap["s"]  := dir(0,-1,1)
+
+    dirmap["ne"] := dir(1,0,-1)
+    dirmap["sw"] := dir(-1,0,1)
+
+    dirmap["nw"] := dir(-1,1,0)
+    dirmap["se"] := dir(1,-1,0)
+    
+    inf := open(args[1],"r")
+
+    while line := read(inf) do {
+        curpos := dir(0,0,0)
+        maxdist := 0
+        line ? while not pos(0) do {
+            step := tab(upto(',') | 0)
+            d := dirmap[step]
+            curpos.x +:= d.x
+            curpos.y +:= d.y
+            curpos.z +:= d.z
+            maxdist <:= (abs(curpos.x) + abs(curpos.y) + abs(curpos.z)) /2
+            =","
+        }
+        dist := (abs(curpos.x) + abs(curpos.y) + abs(curpos.z)) /2
+        write("ending dist=",dist," max=",maxdist)
+    }
+
+end

@@ -1,0 +1,32 @@
+link scan
+procedure main(args)
+    inf := open(args[1],"r")
+    tscore := 0
+    garbage := 0
+    while line := read(inf) do {
+        write(line)
+        while i := upto('!',line) do 
+            line[i:i+2] := ""
+            
+        s := ""
+        line ? {
+            repeat {
+                s ||:= tab(upto('<')|0)
+                if pos(0) then break
+                ="<" & garbage +:= *tab(upto('>')) & =">"
+            }
+        }
+        count := 0
+        depth := 0
+        score := 0
+        s ? {
+            while tab(upto('{}')) do {
+                (="{" & depth +:= 1 & score +:= depth & count +:= 1) |
+                (="}" & depth -:= 1)
+            }
+        }
+        write(count," ",score," ",depth)
+        tscore +:= score
+    }
+    write("->",tscore," garbage=",garbage)
+end

@@ -1,0 +1,9 @@
+link numbers
+procedure main(args)
+    n := args[1]
+    num := floor( ceil ( sqrt(n)) / 2 )
+    off := (n - (2*num-1)^2) % (2*num)
+    steps := num + abs(off-num)
+    write(steps)
+end
+    
