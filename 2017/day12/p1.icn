@@ -1,7 +1,5 @@
 link ximage
 
-record NODE(this,connections)
-
 procedure main(args)
 
     inf := open(args[1],"r")
@@ -11,15 +9,15 @@ procedure main(args)
     every line := !inf do {
         line ? {
             n := tab(upto(' '))
-            /nodes[n] := NODE(n,set([]))
+            /nodes[n] := set([])
             tab(many(' '))
             ="<->"
             tab(many(' '))
             while not pos(0) do {
                 c := tab(upto(' ,') | 0)
-                /nodes[c] := NODE(n,set([]))
-                insert(nodes[n].connections,nodes[c])
-                insert(nodes[c].connections,nodes[n])
+                /nodes[c] := set([])
+                insert(nodes[n],nodes[c])
+                insert(nodes[c],nodes[n])
                 tab(many(' ,'))
             }
 
@@ -46,7 +44,7 @@ end
 procedure visit(n,g)
     if member(g,n) then return
     insert(g,n)
-    every c := !n.connections do {
+    every c := !n do {
         visit(c,g)
     }
 
