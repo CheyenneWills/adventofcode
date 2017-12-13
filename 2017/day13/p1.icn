@@ -1,0 +1,24 @@
+procedure main(args)
+    inf := open(args[1],"r")
+    sum := 0
+    t := 0
+    fw := []
+    every line := !inf do {
+        line ? {
+            n := integer(tab(many(&digits)))
+            tab(upto(&digits))
+            d := integer(tab(many(&digits)))
+        }
+        i := n % (2*(d - 1))
+        if i = 0 then sum +:= n*d
+        put(fw,[n,d])
+    }
+    write("part1=",sum)
+    every t := seq(0,1) do {
+        every r := !fw do {
+            (i := (r[1]+t) % (2*(r[2]-1))) = 0 & break next
+        }
+        write("part2=",t)
+        break
+    }
+end
