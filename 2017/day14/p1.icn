@@ -1,5 +1,5 @@
 link ximage
-
+global grid, visited
 procedure main(args)
 
     pinput := "uugsqrei"
@@ -22,13 +22,35 @@ procedure main(args)
         }
     }
     c := 0
-    every i := 1 to 8 do {
-        write(grid[((i-1)*128)+1 +: 8])
-    }
+    
     every find("#",grid) do c +:= 1
-    write(c)
+    write("Part1=",c)
+
+    visited := set([])
+    groups := []
+    every put(groups, mkgroup(1 to *grid))
+    write("part2=",*groups)
+end
+procedure mkgroup(p)
+    
+    if grid[p] ~== "#" then fail
+    if member(visited,p) then fail
+
+    insert(visited,p)
+    grp := set([])
+    insert(grp,p)
+    every n := ![-128,1,128,-1] & 
+        not (n+p <= 0 |
+             n+p > *grid |
+            (n = -1 & p % 128 = 1) |
+            (n = 1 & p % 128 = 0)) do {
+        grp ++:= mkgroup(p+n)
+    }
+    return grp
 end
 
+
+# From Day 10
 procedure knothash(s)
 L := []
 every put(L,0 to 255)
@@ -57,18 +79,7 @@ every i := 1 to *L do {
             densehash[integer((i-1)/16) + 1] := ixor(densehash[integer((i-1)/16)+1],L[i])
         
 }
-#r := ""
-#every r ||:= hexstr(!densehash)
+
 return densehash
 
-end
-
-procedure hexstr(n)
-    s := ""
-    m := ishift(1,4) - 1
-    while n ~= 0 & n ~= -1 do {
-        s := "0123456789abcdef" [ 1 + iand(n,m)] || s
-        n := ishift(n,-4)
-    }
-    return s
 end
