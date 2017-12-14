@@ -1,0 +1,75 @@
+procedure main(args)
+s := args[1]
+ws := '\t '
+inf := open("input.txt","r")
+lines := []
+while put(lines,trim(read(inf)))
+while line := pull(lines) do {
+    writes(line," : [",s,"]")
+    line ? {
+        if ="swap position" &
+            tab(many(ws)) &
+            X := integer(tab(many(&digits))) &
+            tab(many(ws)) &
+            ="with position" &
+            tab(many(ws)) &
+            Y := integer(tab(many(&digits))) then {
+                s[X+1] :=: s[Y+1]
+            }
+        else if ="swap letter" &
+            tab(many(ws)) &
+            X := move(1) &
+            tab(many(ws)) &
+            ="with letter" &
+            tab(many(ws)) &
+            Y := move(1) then {
+                s[find(Y,s)] :=: s[find(X,s)]
+            }
+        else if ="rotate" &
+            tab(many(ws)) &
+            LorR := (="left" | ="right") &
+            tab(many(ws)) &
+            X := integer(tab(many(&digits))) then {
+                if LorR == "left" then 
+                    s := s[-X:0] || s[1:-X] 
+                else 
+                    s := s[X+1:0] || s[1:X+1]
+            }
+        else if ="rotate based on position of letter" &
+            tab(many(ws)) &
+            X := move(1) then {
+                p := find(X,s)-1
+                writes(" ",p)
+                p := map(string(p),"0123456","5162730")
+                p +:= 1
+                writes(" R ",p," " )
+                s := s[p+1:0] || s[1:p+1] 
+            }
+        else if ="reverse positions" &         
+            tab(many(ws)) &                    
+            X := integer(tab(many(&digits))) &
+            tab(many(ws)) &
+            ="through" &
+            tab(many(ws)) &
+            Y := integer(tab(many(&digits))) then {
+                s[X+1:Y+2] := reverse(s[X+1:Y+2])
+            }
+        else if ="move position" &
+            tab(many(ws)) &
+            X := integer(tab(many(&digits))) &
+            tab(many(ws)) &
+            ="to position" &
+            tab(many(ws)) &
+            Y := integer(tab(many(&digits))) then {
+                c := s[Y+1]             
+                s[Y+1] := ""        
+                s[X+1:X+1] := c          
+            }
+        else stop("Error:",line)
+        write(" => [",s,"]")
+    }
+}
+write(s)
+
+
+end
