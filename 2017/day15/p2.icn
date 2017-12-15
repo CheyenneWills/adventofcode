@@ -1,0 +1,21 @@
+
+procedure main(args)
+   #comprun{gens(65,16807,4)\1056,gens(8921,48271,8)\1056}
+   comprun{gens(116,16807,4)\5000000,gens(299,48271,8)\5000000}
+end
+
+procedure comprun(S)
+    count := 0
+    while v1 := iand(@S[1],16rffff) do {
+        if v1 = iand(@S[2],16rffff) then count +:= 1
+    }
+    write(count)
+end
+
+procedure gens(v,f,x)
+    repeat {
+        v := (v * f) % 2147483647
+        if v % x = 0 then
+            suspend v
+    }
+end
