@@ -1,0 +1,49 @@
+procedure main(args)
+    inf := open(args[1],"r")
+    l := read(inf)
+    s := &lcase[1:17]
+   
+    s := dance(l,s)
+    write("part1=",s)
+
+    s2 := s
+    every seqlen := seq() do {
+        s2 := dance(l,s2)
+        if s2 == s then break
+    }
+    n := ( (1000000000-1) % seqlen) 
+    write("cycles after ",seqlen, " iterations,  need to perform ",n, " iterations")
+    s2 := s
+    every 1 to n do
+        s2 := dance(l,s2)
+
+    write("Part2=",s2)
+    
+end
+
+procedure dance(l,s)
+    l ? while not pos(0) do {
+        tab(upto(',') | 0) ? {          
+            case move(1) of {
+                "s": {
+                    v := tab(many(&digits))
+                    s := s[-v:0] || s[1:-v]
+                }
+                "x": {
+                    v1 := tab(many(&digits)) + 1
+                    ="/"
+                    v2 := tab(many(&digits)) + 1
+                    s[v1] :=: s[v2]
+                }
+                "p": {
+                    v1 := move(1)
+                    ="/"
+                    v2 := move(1)
+                    s[find(v1,s)] :=: s[find(v2,s)]
+                }
+            }
+        }
+        =","
+    }
+    return s
+end
