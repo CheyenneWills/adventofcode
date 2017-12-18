@@ -1,0 +1,97 @@
+link ximage
+record inst(op,p1,p2)
+global pgm0, pgm1
+procedure main(args)
+	inf := open(args[1],"r")
+	mem := []
+	
+	ws := ' \t'
+	while line := trim(!inf) do {
+		line ? {
+			i := inst("","","")
+			i.op := tab(upto(ws))
+			tab(many(ws))
+
+			case i.op of {
+				# 1 param
+				"snd" |
+				"rcv":
+					i.p1 := tab(0)
+				# 2 param
+				"set" |
+				"add" |
+				"mul" | 
+				"mod" |
+				"jgz": {
+					i.p1 := tab(upto(ws))
+					tab(many(ws))
+					i.p2 := tab(0)
+				}
+			}
+			i.p1 := integer(i.p1)
+			i.p2 := integer(i.p2)
+			put(mem,i)
+		}
+	}
+	close(inf)
+
+	pgm0 := create runpgm(pgm1,copy(mem),0)
+	pgm1 := create runpgm(pgm0,copy(mem),1)
+	@pgm0
+	
+
+end
+procedure runpgm(otherpgm,mem,pgmname)
+	regs := table(0)
+	regs["p"] := pgmname
+	
+	IP := 1
+	
+	count := 0
+
+	rcvq := []
+	if pgmname = 0 then 
+		put(rcvq,\@otherpgm)
+
+	repeat {
+		if IP > *mem then break
+		i := mem[IP]
+		OIP := IP
+		IP +:= 1
+		
+		case i.op of {
+			"snd": {
+				# If otherpgm fails, then we are done as well..
+				rcv := 	(integer(i.p1) | integer(regs[i.p1])) @otherpgm | break 
+				if \rcv 
+					then put(rcvq,rcv)
+			}
+			"set": regs[i.p1] := integer(i.p2) | integer(regs[i.p2])
+			"add": regs[i.p1] +:= integer(i.p2) | integer(regs[i.p2])
+			"mul": regs[i.p1] *:= integer(i.p2) | integer(regs[i.p2])
+			"mod": regs[i.p1] %:= integer(i.p2) | integer(regs[i.p2])
+			"rcv": {
+					if *rcvq > 0 then {
+						regs[i.p1] := pop(rcvq)
+						count +:= 1
+					}
+					else {
+						# If nothing queued and otherpgm fails, we are done as well
+						rcv := @otherpgm | break
+						# If otherpgm is also waiting.. we are in a deadlock
+						if /rcv then break
+						regs[i.p1] := rcv
+						count +:= 1
+					}
+			}
+			"jgz": {
+				if (integer(i.p1) | integer(regs[i.p1])) > 0 then 
+					IP := OIP + (integer(i.p2) | integer(regs[i.p2]))
+			}
+				
+ 			default: break
+		}
+				
+	}
+	write(pgmname," received:",count)
+end

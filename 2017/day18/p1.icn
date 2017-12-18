@@ -1,0 +1,94 @@
+link ximage
+record inst(op,p1,p2)
+global pgm1, pgm2
+procedure main(args)
+	inf := open(args[1],"r")
+	mem := []
+	
+	ws := ' \t'
+	while line := trim(!inf) do {
+		line ? {
+			i := inst("","","")
+			i.op := tab(upto(ws))
+			tab(many(ws))
+
+			case i.op of {
+				# 1 param
+				"snd" |
+				"rcv":
+					i.p1 := tab(0)
+				# 2 param
+				"set" |
+				"add" |
+				"mul" | 
+				"mod" |
+				"jgz": {
+					i.p1 := tab(upto(ws))
+					tab(many(ws))
+					i.p2 := tab(0)
+				}
+			}
+			i.p1 := integer(i.p1)
+			i.p2 := integer(i.p2)
+			put(mem,i)
+		}
+	}
+	close(inf)
+
+	every n := 1 to *mem do {
+		i := mem[n]
+		write(left(n,4)," ",left(i.op,4)," ",left(i.p1,4)," ", left(i.p2,4)) 
+	}
+	write("***")
+
+	pgm1 := create runpgm(pgm2,copy(mem))
+	pgm2 := create runpgm(pgm1,copy(mem))
+
+end
+procedure runpgm(mem)
+	regs := table(0)
+	curfreq := 0
+	
+	IP := 1
+
+	first := &null
+	repeat {
+		if IP > *mem then break
+		i := mem[IP]
+		OIP := IP
+		IP +:= 1
+		writes("FREQ:",curfreq)
+		writes(" IP=",left(OIP,4))
+		writes(" OP=",left(i.op,4)," ",
+		  		left(i.p1,4)," ",left(i.p2,4)) 
+		
+		case i.op of {
+			"snd": curfreq := integer(i.p1) | integer(regs[i.p1])
+			"set": regs[i.p1] := integer(i.p2) | integer(regs[i.p2])
+			"add": regs[i.p1] +:= integer(i.p2) | integer(regs[i.p2])
+			"mul": regs[i.p1] *:= integer(i.p2) | integer(regs[i.p2])
+			"mod": regs[i.p1] %:= integer(i.p2) | integer(regs[i.p2])
+			"rcv": {
+				if regs[i.p1] > 0 then {
+					regs[i.p1] := curfreq
+					/first := curfreq
+					break
+				}
+				
+			}
+			"jgz": {
+				if (integer(i.p1) | integer(regs[i.p1])) > 0 then 
+					IP := OIP + integer(i.p2) | integer(regs[i.p2])
+			}
+				
+ 			default: break
+		}
+		every r := key(regs) do writes(" R",r," ",left(regs[r],10))
+		
+		writes("\n")
+	}
+	write()
+	every r := key(regs) do writes(" R",r," ",left(regs[r],10))
+	write()
+	write("FREQ=",curfreq," FIRST=",first)
+end
