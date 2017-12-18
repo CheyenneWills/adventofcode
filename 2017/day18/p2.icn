@@ -1,4 +1,4 @@
-link ximage
+
 record inst(op,p1,p2)
 global pgm0, pgm1
 procedure main(args)
@@ -46,7 +46,6 @@ procedure runpgm(otherpgm,mem,pgmname)
 	regs["p"] := pgmname
 	
 	IP := 1
-	
 	count := 0
 
 	rcvq := []
@@ -56,12 +55,12 @@ procedure runpgm(otherpgm,mem,pgmname)
 	repeat {
 		if IP > *mem then break
 		i := mem[IP]
-		OIP := IP
 		IP +:= 1
 		
 		case i.op of {
 			"snd": {
 				# If otherpgm fails, then we are done as well..
+				count +:= 1
 				rcv := 	(integer(i.p1) | integer(regs[i.p1])) @otherpgm | break 
 				if \rcv 
 					then put(rcvq,rcv)
@@ -71,27 +70,24 @@ procedure runpgm(otherpgm,mem,pgmname)
 			"mul": regs[i.p1] *:= integer(i.p2) | integer(regs[i.p2])
 			"mod": regs[i.p1] %:= integer(i.p2) | integer(regs[i.p2])
 			"rcv": {
-					if *rcvq > 0 then {
+					if *rcvq > 0 then 
 						regs[i.p1] := pop(rcvq)
-						count +:= 1
-					}
 					else {
 						# If nothing queued and otherpgm fails, we are done as well
 						rcv := @otherpgm | break
 						# If otherpgm is also waiting.. we are in a deadlock
 						if /rcv then break
 						regs[i.p1] := rcv
-						count +:= 1
 					}
 			}
 			"jgz": {
 				if (integer(i.p1) | integer(regs[i.p1])) > 0 then 
-					IP := OIP + (integer(i.p2) | integer(regs[i.p2]))
+					IP := (IP-1) + (integer(i.p2) | integer(regs[i.p2]))
 			}
 				
  			default: break
 		}
 				
 	}
-	write(pgmname," received:",count)
+	write(pgmname," sent:",count)
 end

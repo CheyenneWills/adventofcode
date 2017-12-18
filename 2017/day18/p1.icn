@@ -1,6 +1,6 @@
-link ximage
+
 record inst(op,p1,p2)
-global pgm1, pgm2
+
 procedure main(args)
 	inf := open(args[1],"r")
 	mem := []
@@ -35,17 +35,7 @@ procedure main(args)
 	}
 	close(inf)
 
-	every n := 1 to *mem do {
-		i := mem[n]
-		write(left(n,4)," ",left(i.op,4)," ",left(i.p1,4)," ", left(i.p2,4)) 
-	}
-	write("***")
-
-	pgm1 := create runpgm(pgm2,copy(mem))
-	pgm2 := create runpgm(pgm1,copy(mem))
-
-end
-procedure runpgm(mem)
+ 
 	regs := table(0)
 	curfreq := 0
 	
@@ -55,12 +45,7 @@ procedure runpgm(mem)
 	repeat {
 		if IP > *mem then break
 		i := mem[IP]
-		OIP := IP
 		IP +:= 1
-		writes("FREQ:",curfreq)
-		writes(" IP=",left(OIP,4))
-		writes(" OP=",left(i.op,4)," ",
-		  		left(i.p1,4)," ",left(i.p2,4)) 
 		
 		case i.op of {
 			"snd": curfreq := integer(i.p1) | integer(regs[i.p1])
@@ -71,24 +56,16 @@ procedure runpgm(mem)
 			"rcv": {
 				if regs[i.p1] > 0 then {
 					regs[i.p1] := curfreq
-					/first := curfreq
 					break
 				}
-				
 			}
 			"jgz": {
 				if (integer(i.p1) | integer(regs[i.p1])) > 0 then 
-					IP := OIP + integer(i.p2) | integer(regs[i.p2])
+					IP := (IP-1) +  (integer(i.p2) | integer(regs[i.p2])) 
 			}
 				
  			default: break
 		}
-		every r := key(regs) do writes(" R",r," ",left(regs[r],10))
-		
-		writes("\n")
 	}
-	write()
-	every r := key(regs) do writes(" R",r," ",left(regs[r],10))
-	write()
-	write("FREQ=",curfreq," FIRST=",first)
+	write("FREQ=",curfreq)
 end
