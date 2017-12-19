@@ -1,0 +1,52 @@
+procedure main(args)
+    inf := open(args[1],"r")
+    
+    maze := []
+    every put(maze,!inf)
+
+    # Find starting point
+
+    x := find("|",maze[1])
+    y := 1
+    d := "S"
+
+    bag := ""
+    steps := 0
+    repeat {
+        steps +:= 1
+        # Move
+        case d of {
+            "S": y +:= 1
+            "N": y -:= 1
+            "E": x +:= 1
+            "W": x -:= 1
+        }
+        
+        if (y < 0 | y > *maze) then break
+        if (x < 0 | x > *maze[y]) then break
+       
+        if maze[y][x] == " " then break
+
+        if any(&lcase ++ &ucase,maze[y][x]) then bag ||:= maze[y][x]
+        else if maze[y][x] == "+" then {
+            # Change direction
+            case d of {
+                "S"|"N":
+                    d := getndir(maze,y,x+1,"E") |
+                         getndir(maze,y,x-1,"W")
+                
+                "E"|"W":
+                    d := getndir(maze,y-1,x,"N") |
+                         getndir(maze,y+1,x,"S")
+            }
+        }
+    }
+    write(bag," steps=",steps)
+end
+
+procedure getndir(maze,y,x,newd)
+    if y < 0 | y > *maze then fail
+    if x < 0 | x > *maze[y] then fail
+    if maze[y][x] == " " then fail
+    return newd
+end
