@@ -1,0 +1,32 @@
+
+procedure main(args)
+      
+    steps := \args[1] | 303
+
+    spinlock := [0]
+    cur := 0
+    every i := 1 to 2017 do {
+        cur := (steps+cur) % *spinlock + 1 
+        spinlock := spinlock[1:cur+1] ||| [i] ||| spinlock[cur+1:0]
+    }
+    write(spinlock[cur+1 % *spinlock + 1] )
+    
+    # Part 2.. watch for when cur = 1
+    part2 := 0
+    cur := 0
+    every i := 1 to 50000000 do {
+        cur := (steps+cur) % i + 1
+        if cur = 1 then 
+            part2 := i
+    }
+    write(part2)
+
+end
+
+procedure dumplst(l,cur)
+    every i := 1 to *l do {
+        writes( (i=cur+1 & "(")|"",l[i],(i=cur+1 & ")")|""," ")
+    }
+    write()
+
+end
