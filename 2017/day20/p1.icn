@@ -1,0 +1,97 @@
+link ximage
+record particle(id,dist,amag,vmag,px,py,pz,vx,vy,vz,ax,ay,az,collides)
+
+
+
+procedure main(args)
+    inf := open(args[1],"r")
+    plist := []
+    num := '-' ++ &digits
+
+    pmin := &null
+    id := 0
+    every l := !inf do {
+        p := particle()
+        p.id := id
+        id +:= 1
+
+        l ? {
+            tab(upto(num))
+            p.px := tab(many(num))
+            tab(upto(num))
+            p.py := tab(many(num))
+            tab(upto(num))
+            p.pz := tab(many(num))
+
+            tab(upto(num))
+            p.vx := tab(many(num))
+            tab(upto(num))
+            p.vy := tab(many(num))
+            tab(upto(num))
+            p.vz := tab(many(num))
+
+            tab(upto(num))
+            p.ax := tab(many(num))
+            tab(upto(num))
+            p.ay := tab(many(num))
+            tab(upto(num))
+            p.az := tab(many(num))
+        }
+        p.dist := abs(p.px) + abs(p.py) + abs(p.pz)
+        p.amag := abs(p.ax) + abs(p.ay) + abs(p.az)
+        p.vmag := abs(p.vx) + abs(p.vy) + abs(p.vz)
+        p.collides := []
+        put(plist,p)
+
+        pmin := pcomp(pmin,p)
+        
+    }
+    write("Part1=",pmin.id)
+    
+
+    # Part 2
+    every i := 1 to *plist-1 do {
+        every j := i+1 to *plist do {
+            push(plist[i].collides,[ plist[j],collide( plist[i],plist[j] )])
+        }
+    }
+
+end
+
+procedure collide(p0,p1)
+    # Calculate the time that p0 and p1 collide -- or fail
+    a := p0.ax - p1.ax
+    v := p0.vx - p1.vx
+    p := p0.px - p1.px 
+
+    # p + vt + 1/2t(t+1)a = 0
+    if a = 0 then {
+        if v = 0 then fail
+        t := -(p/v) 
+    }
+    else {
+        t := (sqrt((a+2*v)^2 - 8*a*p) + a + 2*v)/ (2*a) | fail
+    }
+    xdump(p0)
+    xdump(p1)
+    write(t)
+    return t
+end
+
+
+procedure pcomp(pmin,p)
+    if /pmin then return p
+
+    if pmin.amag < p.amag then fail
+    if pmin.amag > p.amag then return p
+
+    # Equal absolute mag of accel
+    if pmin.vmag < p.vmag then fail
+    if pmin.vmag > p.vmag then return p
+
+    # Equal absolute vol
+    if pmin.dist < p.dist then fail
+    if pmin.dist > p.dist then return p
+
+    fail
+end
