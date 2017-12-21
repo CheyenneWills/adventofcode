@@ -91,10 +91,11 @@ procedure collide(p0,p1)
     vz := p0.vz - p1.vz
     pz := p0.pz - p1.pz 
 
-    every t := solvequad(ax,vx+ax,px) do 
+    every t := solvequad(ax,vx+ax,px) | solvequad(ay,vy+ay,py) |solvequad(az,vz+az,pz) do 
         if t > 0 & integer(t) = t then {
             t := integer(t)
-            if ay*t^2 + (vy+ay)*t + py = 0 &
+            if ax*t^2 + (vx+ax)*t + px = 0 &
+               ay*t^2 + (vy+ay)*t + py = 0 &
                az*t^2 + (vz+az)*t + pz = 0 then suspend r
         }
 end
