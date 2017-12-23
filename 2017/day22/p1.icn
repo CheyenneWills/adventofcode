@@ -1,0 +1,39 @@
+procedure main(args)
+    infected := set()
+    inf := open(args[1],"r")
+    i := 0
+    every l := !inf do {
+        i+:=1
+        every insert(infected,i ||","|| find("#",l)) 
+    }
+    
+    cury := i/2 + 1
+    curx := *l/2 + 1
+    
+    dir := "u"
+    dmap := table()
+    #             rl
+    dmap["u"] := "rl"
+    dmap["r"] := "du"
+    dmap["d"] := "lr"
+    dmap["l"] := "ud"
+    count := 0
+    every 1 to 10000 do {
+        curp := cury || "," || curx
+        if member(infected,curp) then {
+            dir := dmap[dir][1]
+            delete(infected,curp)
+        } else {
+            dir := dmap[dir][2]
+            insert(infected,curp)
+            count +:= 1
+        }
+        case dir of {
+            "u": cury -:= 1
+            "d": cury +:= 1
+            "r": curx +:= 1
+            "l": curx -:= 1
+        }
+    }
+    write(count)
+end

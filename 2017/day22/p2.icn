@@ -1,0 +1,52 @@
+link ximage
+procedure main(args)
+    infected := table()
+    inf := open(args[1],"r")
+    i := 0
+    every l := !inf do {
+        i+:=1
+        every insert(infected, i||","||find("#",l),"I") 
+    }
+    
+    cury := i/2 + 1
+    curx := *l/2 + 1
+    
+    dir := "u"
+    dmap := table()
+    #             rlb
+    dmap["u"] := "rld"
+    dmap["r"] := "dul"
+    dmap["d"] := "lru"
+    dmap["l"] := "udr"
+
+    count := 0
+    every 1 to 10000000 do {
+        curp := cury || "," || curx
+        state := \infected[curp] | "C"
+        case state of {
+            "C": {
+                infected[curp] := "W"
+                dir := dmap[dir][2]
+            }
+            "W": {
+                count +:= 1
+                infected[curp] := "I"
+            }
+            "I": {
+                infected[curp] := "F"
+                dir := dmap[dir][1]
+            }
+            "F": {
+                delete(infected,curp)
+                dir := dmap[dir][3]
+            }
+        }
+        case dir of {
+            "u": cury -:= 1
+            "d": cury +:= 1
+            "r": curx +:= 1
+            "l": curx -:= 1
+        }
+    }
+    write(count)
+end
