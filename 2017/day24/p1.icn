@@ -1,0 +1,51 @@
+procedure main(args)
+    inf := open(args[1],"r")
+
+    pieces := []
+    
+    every put(pieces,!inf)
+    pieces := set(pieces)   
+    bridge := "/0"
+    bridgelist := []
+    longest := 0
+
+    every b := makebridge(bridge,pieces) do {
+        longest <:= *b
+        push(bridgelist,[score(b),b])
+    }
+    
+    bridgelist := sortf(bridgelist,1,1)
+    write(bridgelist[-1][1])
+    
+    longlist := []
+    every b := !bridgelist & *b[2] = longest do
+        push(longlist,b)
+
+    longlist := sortf(longlist,1,1)
+    write(longlist[-1][1])
+end
+
+procedure makebridge(bridge,pieces)
+    every (piece := !pieces) &  (b := bridge || "--" || matchend(bridge,piece)) do {
+        suspend b
+        unused := pieces -- set([piece])
+        every suspend makebridge(b,unused) 
+    }
+end
+
+procedure matchend(a,b)
+    every ae := find("/",a) 
+    b1 := b[1:upto('/',b)]
+    b2 := b[upto('/',b)+1:0]
+    if a[ae+1:0] == b1 then return b1 || "/" || b2
+    if a[ae+1:0] == b2 then return b2 || "/" || b1
+    fail
+end
+
+procedure score(s)
+    sum := 0
+    s ? while tab(upto(&digits)) do {
+        sum +:= tab(many(&digits))
+    }
+    return sum
+end
