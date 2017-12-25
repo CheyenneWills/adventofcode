@@ -1,0 +1,83 @@
+
+record stbl(wrt,movedir,newstate)
+procedure main(args)
+    input := parseinput(args[1])
+    start := input[1]
+    steps := input[2]
+    pgm := input[3]
+    
+    cursor := 1
+    tape := "0"
+    state := start
+    write("steps=",steps)
+    every n := 1 to steps do {
+        writes("\r",right(n,14), " ",&ucase[state]," @ ",right(cursor,5)," ",right(*tape,5))
+        
+        tv := integer(tape[cursor]) + 1
+        cstate := pgm[state][tv]
+        tape[cursor] := cstate.wrt 
+        cursor +:= cstate.movedir
+        state := cstate.newstate
+
+        if cursor > *tape then tape ||:= "0"
+        if cursor = 0 then {
+            tape[1:1] := "0"
+            cursor := 1
+        }
+    }
+    checksum := 0
+    every find("1",tape) do checksum +:= 1
+    write("")
+    write(checksum)
+end
+procedure parseinput(f)
+    pgm := []
+    statemap := table()
+    ws := '\t '
+    inf := open(f,"r")
+    every line := trim(!inf) do {
+        line ? {
+            tab(many(ws))
+            if pos(0) then next
+            if ="Begin in state" then {
+                tab(many(ws)) 
+                start := move(1) 
+            }
+            else if ="Perform a diagnostic checksum after" then {
+                tab(many(ws)) 
+                steps := integer(tab(many(&digits)))
+            } else if ="In state" then {
+                tab(many(ws)) 
+                s := move(1) 
+                         
+                put(pgm,[stbl(),stbl()])
+                         
+                cpos := *pgm
+                statemap[s] := *pgm
+                statemap[*pgm] := s
+            } else if ="If the current value is" then {
+                tab(many(ws)) 
+                cv := move(1) 
+            } else if ="- Write the value" then {
+                tab(many(ws)) &
+                pgm[cpos][cv+1].wrt := move(1) 
+            } else if ="- Move one slot to the" then {
+                tab(many(ws)) 
+                (="right" & pgm[cpos][cv+1].movedir := 1) |
+                (="left"  & pgm[cpos][cv+1].movedir := -1) 
+            } else if ="- Continue with state" then {
+                tab(many(ws))
+                pgm[cpos][cv+1].newstate := move(1)
+            } 
+        }
+        
+    }
+    # Convert state characters to indexes
+     
+    start := statemap[start]
+    every i := 1 to *pgm do {
+        pgm[i][1].newstate := statemap[pgm[i][1].newstate]
+        pgm[i][2].newstate := statemap[pgm[i][2].newstate]
+    }
+    return [start,steps,pgm]
+end
