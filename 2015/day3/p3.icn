@@ -1,6 +1,7 @@
 link ximage
 record location(x,y)
-procedure main()
+procedure main(args)
+    part2 := 1
     world := table()
     pos1 := location(0,0)
     pos2 := location(0,0)
@@ -19,7 +20,7 @@ procedure main()
             /world[i] := 0
             world[i] +:= 1
             # Swap .. this is the dirty work for Part 2
-            pos1 :=: pos2
+            if \part2 then pos1 :=: pos2
             cur := pos1
           }
         }
