@@ -37,12 +37,12 @@ procedure main()
         }
 
     }
-    showgrid(grid)
+    #showgrid(grid)
     c := 0
     every x := 1 to W do
         every y := 1 to H do
             if grid[x][y] == 1 then c +:= 1
-    write("# lights",c)
+    write("# lights ",c)
 end
 procedure showgrid(grid)
     gridx := W||",g16,"
