@@ -1,0 +1,307 @@
+IP:  1 set b 86     Ra:1  => Rb:86
+IP:  2 set c b      Ra:1 Rb:86  => Rc:86
+IP:  3 set f 17     Rc:86 Ra:1 Rb:86  => Rf:17
+IP:  4 jnz a 2      Rc:86 Ra:1 Rb:86 Rf:17 
+
+IP:  6 set a 10     Rc:86 Ra:1 Rb:86 Rf:17  => Ra:10
+    IP:  7 set g 0      Rc:86 Ra:10 Rb:86 Rf:17  => Rg:0
+    IP:  8 sub g c      Rc:86 Rg:0 Ra:10 Rb:86 Rf:17  => Rg:-86
+    IP:  9 sub b g      Rc:86 Rg:-86 Ra:10 Rb:86 Rf:17  => Rb:172
+    IP: 10 set g 0      Rc:86 Rg:-86 Ra:10 Rb:172 Rf:17  => Rg:0
+    IP: 11 sub g b      Rc:86 Rg:0 Ra:10 Rb:172 Rf:17  => Rg:-172
+    IP: 12 sub c g      Rc:86 Rg:-172 Ra:10 Rb:172 Rf:17  => Rc:258
+    IP: 13 sub a 1      Rc:258 Rg:-172 Ra:10 Rb:172 Rf:17  => Ra:9
+    IP: 14 jnz a -7     Rc:258 Rg:-172 Ra:9 Rb:172 Rf:17 
+    IP:  7 set g 0      Rc:258 Rg:-172 Ra:9 Rb:172 Rf:17  => Rg:0
+    IP:  8 sub g c      Rc:258 Rg:0 Ra:9 Rb:172 Rf:17  => Rg:-258
+    IP:  9 sub b g      Rc:258 Rg:-258 Ra:9 Rb:172 Rf:17  => Rb:430
+    IP: 10 set g 0      Rc:258 Rg:-258 Ra:9 Rb:430 Rf:17  => Rg:0
+    IP: 11 sub g b      Rc:258 Rg:0 Ra:9 Rb:430 Rf:17  => Rg:-430
+    IP: 12 sub c g      Rc:258 Rg:-430 Ra:9 Rb:430 Rf:17  => Rc:688
+    IP: 13 sub a 1      Rc:688 Rg:-430 Ra:9 Rb:430 Rf:17  => Ra:8
+    IP: 14 jnz a -7     Rc:688 Rg:-430 Ra:8 Rb:430 Rf:17 
+    IP:  7 set g 0      Rc:688 Rg:-430 Ra:8 Rb:430 Rf:17  => Rg:0
+    IP:  8 sub g c      Rc:688 Rg:0 Ra:8 Rb:430 Rf:17  => Rg:-688
+    IP:  9 sub b g      Rc:688 Rg:-688 Ra:8 Rb:430 Rf:17  => Rb:1118
+    IP: 10 set g 0      Rc:688 Rg:-688 Ra:8 Rb:1118 Rf:17  => Rg:0
+    IP: 11 sub g b      Rc:688 Rg:0 Ra:8 Rb:1118 Rf:17  => Rg:-1118
+    IP: 12 sub c g      Rc:688 Rg:-1118 Ra:8 Rb:1118 Rf:17  => Rc:1806
+    IP: 13 sub a 1      Rc:1806 Rg:-1118 Ra:8 Rb:1118 Rf:17  => Ra:7
+    IP: 14 jnz a -7     Rc:1806 Rg:-1118 Ra:7 Rb:1118 Rf:17 
+    IP:  7 set g 0      Rc:1806 Rg:-1118 Ra:7 Rb:1118 Rf:17  => Rg:0
+    IP:  8 sub g c      Rc:1806 Rg:0 Ra:7 Rb:1118 Rf:17  => Rg:-1806
+    IP:  9 sub b g      Rc:1806 Rg:-1806 Ra:7 Rb:1118 Rf:17  => Rb:2924
+    IP: 10 set g 0      Rc:1806 Rg:-1806 Ra:7 Rb:2924 Rf:17  => Rg:0
+    IP: 11 sub g b      Rc:1806 Rg:0 Ra:7 Rb:2924 Rf:17  => Rg:-2924
+    IP: 12 sub c g      Rc:1806 Rg:-2924 Ra:7 Rb:2924 Rf:17  => Rc:4730
+    IP: 13 sub a 1      Rc:4730 Rg:-2924 Ra:7 Rb:2924 Rf:17  => Ra:6
+    IP: 14 jnz a -7     Rc:4730 Rg:-2924 Ra:6 Rb:2924 Rf:17 
+    IP:  7 set g 0      Rc:4730 Rg:-2924 Ra:6 Rb:2924 Rf:17  => Rg:0
+    IP:  8 sub g c      Rc:4730 Rg:0 Ra:6 Rb:2924 Rf:17  => Rg:-4730
+    IP:  9 sub b g      Rc:4730 Rg:-4730 Ra:6 Rb:2924 Rf:17  => Rb:7654
+    IP: 10 set g 0      Rc:4730 Rg:-4730 Ra:6 Rb:7654 Rf:17  => Rg:0
+    IP: 11 sub g b      Rc:4730 Rg:0 Ra:6 Rb:7654 Rf:17  => Rg:-7654
+    IP: 12 sub c g      Rc:4730 Rg:-7654 Ra:6 Rb:7654 Rf:17  => Rc:12384
+    IP: 13 sub a 1      Rc:12384 Rg:-7654 Ra:6 Rb:7654 Rf:17  => Ra:5
+    IP: 14 jnz a -7     Rc:12384 Rg:-7654 Ra:5 Rb:7654 Rf:17 
+    IP:  7 set g 0      Rc:12384 Rg:-7654 Ra:5 Rb:7654 Rf:17  => Rg:0
+    IP:  8 sub g c      Rc:12384 Rg:0 Ra:5 Rb:7654 Rf:17  => Rg:-12384
+    IP:  9 sub b g      Rc:12384 Rg:-12384 Ra:5 Rb:7654 Rf:17  => Rb:20038
+    IP: 10 set g 0      Rc:12384 Rg:-12384 Ra:5 Rb:20038 Rf:17  => Rg:0
+    IP: 11 sub g b      Rc:12384 Rg:0 Ra:5 Rb:20038 Rf:17  => Rg:-20038
+    IP: 12 sub c g      Rc:12384 Rg:-20038 Ra:5 Rb:20038 Rf:17  => Rc:32422
+    IP: 13 sub a 1      Rc:32422 Rg:-20038 Ra:5 Rb:20038 Rf:17  => Ra:4
+    IP: 14 jnz a -7     Rc:32422 Rg:-20038 Ra:4 Rb:20038 Rf:17 
+    IP:  7 set g 0      Rc:32422 Rg:-20038 Ra:4 Rb:20038 Rf:17  => Rg:0
+    IP:  8 sub g c      Rc:32422 Rg:0 Ra:4 Rb:20038 Rf:17  => Rg:-32422
+    IP:  9 sub b g      Rc:32422 Rg:-32422 Ra:4 Rb:20038 Rf:17  => Rb:52460
+    IP: 10 set g 0      Rc:32422 Rg:-32422 Ra:4 Rb:52460 Rf:17  => Rg:0
+    IP: 11 sub g b      Rc:32422 Rg:0 Ra:4 Rb:52460 Rf:17  => Rg:-52460
+    IP: 12 sub c g      Rc:32422 Rg:-52460 Ra:4 Rb:52460 Rf:17  => Rc:84882
+    IP: 13 sub a 1      Rc:84882 Rg:-52460 Ra:4 Rb:52460 Rf:17  => Ra:3
+    IP: 14 jnz a -7     Rc:84882 Rg:-52460 Ra:3 Rb:52460 Rf:17 
+    IP:  7 set g 0      Rc:84882 Rg:-52460 Ra:3 Rb:52460 Rf:17  => Rg:0
+    IP:  8 sub g c      Rc:84882 Rg:0 Ra:3 Rb:52460 Rf:17  => Rg:-84882
+    IP:  9 sub b g      Rc:84882 Rg:-84882 Ra:3 Rb:52460 Rf:17  => Rb:137342
+    IP: 10 set g 0      Rc:84882 Rg:-84882 Ra:3 Rb:137342 Rf:17  => Rg:0
+    IP: 11 sub g b      Rc:84882 Rg:0 Ra:3 Rb:137342 Rf:17  => Rg:-137342
+    IP: 12 sub c g      Rc:84882 Rg:-137342 Ra:3 Rb:137342 Rf:17  => Rc:222224
+    IP: 13 sub a 1      Rc:222224 Rg:-137342 Ra:3 Rb:137342 Rf:17  => Ra:2
+    IP: 14 jnz a -7     Rc:222224 Rg:-137342 Ra:2 Rb:137342 Rf:17 
+    IP:  7 set g 0      Rc:222224 Rg:-137342 Ra:2 Rb:137342 Rf:17  => Rg:0
+    IP:  8 sub g c      Rc:222224 Rg:0 Ra:2 Rb:137342 Rf:17  => Rg:-222224
+    IP:  9 sub b g      Rc:222224 Rg:-222224 Ra:2 Rb:137342 Rf:17  => Rb:359566
+    IP: 10 set g 0      Rc:222224 Rg:-222224 Ra:2 Rb:359566 Rf:17  => Rg:0
+    IP: 11 sub g b      Rc:222224 Rg:0 Ra:2 Rb:359566 Rf:17  => Rg:-359566
+    IP: 12 sub c g      Rc:222224 Rg:-359566 Ra:2 Rb:359566 Rf:17  => Rc:581790
+    IP: 13 sub a 1      Rc:581790 Rg:-359566 Ra:2 Rb:359566 Rf:17  => Ra:1
+    IP: 14 jnz a -7     Rc:581790 Rg:-359566 Ra:1 Rb:359566 Rf:17 
+    IP:  7 set g 0      Rc:581790 Rg:-359566 Ra:1 Rb:359566 Rf:17  => Rg:0
+    IP:  8 sub g c      Rc:581790 Rg:0 Ra:1 Rb:359566 Rf:17  => Rg:-581790
+    IP:  9 sub b g      Rc:581790 Rg:-581790 Ra:1 Rb:359566 Rf:17  => Rb:941356
+    IP: 10 set g 0      Rc:581790 Rg:-581790 Ra:1 Rb:941356 Rf:17  => Rg:0
+    IP: 11 sub g b      Rc:581790 Rg:0 Ra:1 Rb:941356 Rf:17  => Rg:-941356
+    IP: 12 sub c g      Rc:581790 Rg:-941356 Ra:1 Rb:941356 Rf:17  => Rc:1523146
+    IP: 13 sub a 1      Rc:1523146 Rg:-941356 Ra:1 Rb:941356 Rf:17  => Ra:0
+    IP: 14 jnz a -7     Rc:1523146 Rg:-941356 Ra:0 Rb:941356 Rf:17 
+
+IP: 15 set h 1      Rc:1523146 Rg:-941356 Ra:0 Rb:941356 Rf:17  => Rh:1
+    IP: 16 set g 0      Rc:1523146 Rg:-941356 Ra:0 Rh:1 Rb:941356 Rf:17  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:1 Rb:941356 Rf:17  => Rg:-1
+    IP: 18 sub h g      Rc:1523146 Rg:-1 Ra:0 Rh:1 Rb:941356 Rf:17  => Rh:2
+    IP: 19 sub f 1      Rc:1523146 Rg:-1 Ra:0 Rh:2 Rb:941356 Rf:17  => Rf:16
+    IP: 20 jnz f -4     Rc:1523146 Rg:-1 Ra:0 Rh:2 Rb:941356 Rf:16 
+    IP: 16 set g 0      Rc:1523146 Rg:-1 Ra:0 Rh:2 Rb:941356 Rf:16  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:2 Rb:941356 Rf:16  => Rg:-2
+    IP: 18 sub h g      Rc:1523146 Rg:-2 Ra:0 Rh:2 Rb:941356 Rf:16  => Rh:4
+    IP: 19 sub f 1      Rc:1523146 Rg:-2 Ra:0 Rh:4 Rb:941356 Rf:16  => Rf:15
+    IP: 20 jnz f -4     Rc:1523146 Rg:-2 Ra:0 Rh:4 Rb:941356 Rf:15 
+    IP: 16 set g 0      Rc:1523146 Rg:-2 Ra:0 Rh:4 Rb:941356 Rf:15  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:4 Rb:941356 Rf:15  => Rg:-4
+    IP: 18 sub h g      Rc:1523146 Rg:-4 Ra:0 Rh:4 Rb:941356 Rf:15  => Rh:8
+    IP: 19 sub f 1      Rc:1523146 Rg:-4 Ra:0 Rh:8 Rb:941356 Rf:15  => Rf:14
+    IP: 20 jnz f -4     Rc:1523146 Rg:-4 Ra:0 Rh:8 Rb:941356 Rf:14 
+    IP: 16 set g 0      Rc:1523146 Rg:-4 Ra:0 Rh:8 Rb:941356 Rf:14  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:8 Rb:941356 Rf:14  => Rg:-8
+    IP: 18 sub h g      Rc:1523146 Rg:-8 Ra:0 Rh:8 Rb:941356 Rf:14  => Rh:16
+    IP: 19 sub f 1      Rc:1523146 Rg:-8 Ra:0 Rh:16 Rb:941356 Rf:14  => Rf:13
+    IP: 20 jnz f -4     Rc:1523146 Rg:-8 Ra:0 Rh:16 Rb:941356 Rf:13 
+    IP: 16 set g 0      Rc:1523146 Rg:-8 Ra:0 Rh:16 Rb:941356 Rf:13  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:16 Rb:941356 Rf:13  => Rg:-16
+    IP: 18 sub h g      Rc:1523146 Rg:-16 Ra:0 Rh:16 Rb:941356 Rf:13  => Rh:32
+    IP: 19 sub f 1      Rc:1523146 Rg:-16 Ra:0 Rh:32 Rb:941356 Rf:13  => Rf:12
+    IP: 20 jnz f -4     Rc:1523146 Rg:-16 Ra:0 Rh:32 Rb:941356 Rf:12 
+    IP: 16 set g 0      Rc:1523146 Rg:-16 Ra:0 Rh:32 Rb:941356 Rf:12  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:32 Rb:941356 Rf:12  => Rg:-32
+    IP: 18 sub h g      Rc:1523146 Rg:-32 Ra:0 Rh:32 Rb:941356 Rf:12  => Rh:64
+    IP: 19 sub f 1      Rc:1523146 Rg:-32 Ra:0 Rh:64 Rb:941356 Rf:12  => Rf:11
+    IP: 20 jnz f -4     Rc:1523146 Rg:-32 Ra:0 Rh:64 Rb:941356 Rf:11 
+    IP: 16 set g 0      Rc:1523146 Rg:-32 Ra:0 Rh:64 Rb:941356 Rf:11  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:64 Rb:941356 Rf:11  => Rg:-64
+    IP: 18 sub h g      Rc:1523146 Rg:-64 Ra:0 Rh:64 Rb:941356 Rf:11  => Rh:128
+    IP: 19 sub f 1      Rc:1523146 Rg:-64 Ra:0 Rh:128 Rb:941356 Rf:11  => Rf:10
+    IP: 20 jnz f -4     Rc:1523146 Rg:-64 Ra:0 Rh:128 Rb:941356 Rf:10 
+    IP: 16 set g 0      Rc:1523146 Rg:-64 Ra:0 Rh:128 Rb:941356 Rf:10  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:128 Rb:941356 Rf:10  => Rg:-128
+    IP: 18 sub h g      Rc:1523146 Rg:-128 Ra:0 Rh:128 Rb:941356 Rf:10  => Rh:256
+    IP: 19 sub f 1      Rc:1523146 Rg:-128 Ra:0 Rh:256 Rb:941356 Rf:10  => Rf:9
+    IP: 20 jnz f -4     Rc:1523146 Rg:-128 Ra:0 Rh:256 Rb:941356 Rf:9 
+    IP: 16 set g 0      Rc:1523146 Rg:-128 Ra:0 Rh:256 Rb:941356 Rf:9  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:256 Rb:941356 Rf:9  => Rg:-256
+    IP: 18 sub h g      Rc:1523146 Rg:-256 Ra:0 Rh:256 Rb:941356 Rf:9  => Rh:512
+    IP: 19 sub f 1      Rc:1523146 Rg:-256 Ra:0 Rh:512 Rb:941356 Rf:9  => Rf:8
+    IP: 20 jnz f -4     Rc:1523146 Rg:-256 Ra:0 Rh:512 Rb:941356 Rf:8 
+    IP: 16 set g 0      Rc:1523146 Rg:-256 Ra:0 Rh:512 Rb:941356 Rf:8  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:512 Rb:941356 Rf:8  => Rg:-512
+    IP: 18 sub h g      Rc:1523146 Rg:-512 Ra:0 Rh:512 Rb:941356 Rf:8  => Rh:1024
+    IP: 19 sub f 1      Rc:1523146 Rg:-512 Ra:0 Rh:1024 Rb:941356 Rf:8  => Rf:7
+    IP: 20 jnz f -4     Rc:1523146 Rg:-512 Ra:0 Rh:1024 Rb:941356 Rf:7 
+    IP: 16 set g 0      Rc:1523146 Rg:-512 Ra:0 Rh:1024 Rb:941356 Rf:7  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:1024 Rb:941356 Rf:7  => Rg:-1024
+    IP: 18 sub h g      Rc:1523146 Rg:-1024 Ra:0 Rh:1024 Rb:941356 Rf:7  => Rh:2048
+    IP: 19 sub f 1      Rc:1523146 Rg:-1024 Ra:0 Rh:2048 Rb:941356 Rf:7  => Rf:6
+    IP: 20 jnz f -4     Rc:1523146 Rg:-1024 Ra:0 Rh:2048 Rb:941356 Rf:6 
+    IP: 16 set g 0      Rc:1523146 Rg:-1024 Ra:0 Rh:2048 Rb:941356 Rf:6  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:2048 Rb:941356 Rf:6  => Rg:-2048
+    IP: 18 sub h g      Rc:1523146 Rg:-2048 Ra:0 Rh:2048 Rb:941356 Rf:6  => Rh:4096
+    IP: 19 sub f 1      Rc:1523146 Rg:-2048 Ra:0 Rh:4096 Rb:941356 Rf:6  => Rf:5
+    IP: 20 jnz f -4     Rc:1523146 Rg:-2048 Ra:0 Rh:4096 Rb:941356 Rf:5 
+    IP: 16 set g 0      Rc:1523146 Rg:-2048 Ra:0 Rh:4096 Rb:941356 Rf:5  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:4096 Rb:941356 Rf:5  => Rg:-4096
+    IP: 18 sub h g      Rc:1523146 Rg:-4096 Ra:0 Rh:4096 Rb:941356 Rf:5  => Rh:8192
+    IP: 19 sub f 1      Rc:1523146 Rg:-4096 Ra:0 Rh:8192 Rb:941356 Rf:5  => Rf:4
+    IP: 20 jnz f -4     Rc:1523146 Rg:-4096 Ra:0 Rh:8192 Rb:941356 Rf:4 
+    IP: 16 set g 0      Rc:1523146 Rg:-4096 Ra:0 Rh:8192 Rb:941356 Rf:4  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:8192 Rb:941356 Rf:4  => Rg:-8192
+    IP: 18 sub h g      Rc:1523146 Rg:-8192 Ra:0 Rh:8192 Rb:941356 Rf:4  => Rh:16384
+    IP: 19 sub f 1      Rc:1523146 Rg:-8192 Ra:0 Rh:16384 Rb:941356 Rf:4  => Rf:3
+    IP: 20 jnz f -4     Rc:1523146 Rg:-8192 Ra:0 Rh:16384 Rb:941356 Rf:3 
+    IP: 16 set g 0      Rc:1523146 Rg:-8192 Ra:0 Rh:16384 Rb:941356 Rf:3  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:16384 Rb:941356 Rf:3  => Rg:-16384
+    IP: 18 sub h g      Rc:1523146 Rg:-16384 Ra:0 Rh:16384 Rb:941356 Rf:3  => Rh:32768
+    IP: 19 sub f 1      Rc:1523146 Rg:-16384 Ra:0 Rh:32768 Rb:941356 Rf:3  => Rf:2
+    IP: 20 jnz f -4     Rc:1523146 Rg:-16384 Ra:0 Rh:32768 Rb:941356 Rf:2 
+    IP: 16 set g 0      Rc:1523146 Rg:-16384 Ra:0 Rh:32768 Rb:941356 Rf:2  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:32768 Rb:941356 Rf:2  => Rg:-32768
+    IP: 18 sub h g      Rc:1523146 Rg:-32768 Ra:0 Rh:32768 Rb:941356 Rf:2  => Rh:65536
+    IP: 19 sub f 1      Rc:1523146 Rg:-32768 Ra:0 Rh:65536 Rb:941356 Rf:2  => Rf:1
+    IP: 20 jnz f -4     Rc:1523146 Rg:-32768 Ra:0 Rh:65536 Rb:941356 Rf:1 
+    IP: 16 set g 0      Rc:1523146 Rg:-32768 Ra:0 Rh:65536 Rb:941356 Rf:1  => Rg:0
+    IP: 17 sub g h      Rc:1523146 Rg:0 Ra:0 Rh:65536 Rb:941356 Rf:1  => Rg:-65536
+    IP: 18 sub h g      Rc:1523146 Rg:-65536 Ra:0 Rh:65536 Rb:941356 Rf:1  => Rh:131072
+    IP: 19 sub f 1      Rc:1523146 Rg:-65536 Ra:0 Rh:131072 Rb:941356 Rf:1  => Rf:0
+    IP: 20 jnz f -4     Rc:1523146 Rg:-65536 Ra:0 Rh:131072 Rb:941356 Rf:0 
+
+IP: 21 sub h 1      Rc:1523146 Rg:-65536 Ra:0 Rh:131072 Rb:941356 Rf:0  => Rh:131071
+IP: 22 set d 1      Rc:1523146 Rg:-65536 Ra:0 Rh:131071 Rb:941356 Rf:0  => Rd:1
+
+IP: 23 set e c      Rc:1523146 Rg:-65536 Rd:1 Ra:0 Rh:131071 Rb:941356 Rf:0  => Re:1523146
+
+    IP: 24 sub f -1     Rc:1523146 Rg:-65536 Rd:1 Ra:0 Rh:131071 Re:1523146 Rb:941356 Rf:0  => Rf:1
+    IP: 25 set g h      Rc:1523146 Rg:-65536 Rd:1 Ra:0 Rh:131071 Re:1523146 Rb:941356 Rf:1  => Rg:131071
+    IP: 26 sub g f      Rc:1523146 Rg:131071 Rd:1 Ra:0 Rh:131071 Re:1523146 Rb:941356 Rf:1  => Rg:131070
+    IP: 27 jnz g 2      Rc:1523146 Rg:131070 Rd:1 Ra:0 Rh:131071 Re:1523146 Rb:941356 Rf:1 
+    IP: 29 set g d      Rc:1523146 Rg:131070 Rd:1 Ra:0 Rh:131071 Re:1523146 Rb:941356 Rf:1  => Rg:1
+    IP: 30 sub g e      Rc:1523146 Rg:1 Rd:1 Ra:0 Rh:131071 Re:1523146 Rb:941356 Rf:1  => Rg:-1523145
+    IP: 31 jnz g 2      Rc:1523146 Rg:-1523145 Rd:1 Ra:0 Rh:131071 Re:1523146 Rb:941356 Rf:1 
+    IP: 33 sub e 1      Rc:1523146 Rg:-1523145 Rd:1 Ra:0 Rh:131071 Re:1523146 Rb:941356 Rf:1  => Re:1523145
+    IP: 34 jnz 1 -10    Rc:1523146 Rg:-1523145 Rd:1 Ra:0 Rh:131071 Re:1523145 Rb:941356 Rf:1 
+
+    IP: 24 sub f -1     Rc:1523146 Rg:-1523145 Rd:1 Ra:0 Rh:131071 Re:1523145 Rb:941356 Rf:1  => Rf:2
+    IP: 25 set g h      Rc:1523146 Rg:-1523145 Rd:1 Ra:0 Rh:131071 Re:1523145 Rb:941356 Rf:2  => Rg:131071
+    IP: 26 sub g f      Rc:1523146 Rg:131071 Rd:1 Ra:0 Rh:131071 Re:1523145 Rb:941356 Rf:2  => Rg:131069
+    IP: 27 jnz g 2      Rc:1523146 Rg:131069 Rd:1 Ra:0 Rh:131071 Re:1523145 Rb:941356 Rf:2 
+    IP: 29 set g d      Rc:1523146 Rg:131069 Rd:1 Ra:0 Rh:131071 Re:1523145 Rb:941356 Rf:2  => Rg:1
+    IP: 30 sub g e      Rc:1523146 Rg:1 Rd:1 Ra:0 Rh:131071 Re:1523145 Rb:941356 Rf:2  => Rg:-1523144
+    IP: 31 jnz g 2      Rc:1523146 Rg:-1523144 Rd:1 Ra:0 Rh:131071 Re:1523145 Rb:941356 Rf:2 
+    IP: 33 sub e 1      Rc:1523146 Rg:-1523144 Rd:1 Ra:0 Rh:131071 Re:1523145 Rb:941356 Rf:2  => Re:1523144
+    IP: 34 jnz 1 -10    Rc:1523146 Rg:-1523144 Rd:1 Ra:0 Rh:131071 Re:1523144 Rb:941356 Rf:2 
+    
+IP: 24 sub f -1     Rc:1523146 Rg:-1523144 Rd:1 Ra:0 Rh:131071 Re:1523144 Rb:941356 Rf:2  => Rf:3
+IP: 25 set g h      Rc:1523146 Rg:-1523144 Rd:1 Ra:0 Rh:131071 Re:1523144 Rb:941356 Rf:3  => Rg:131071
+IP: 26 sub g f      Rc:1523146 Rg:131071 Rd:1 Ra:0 Rh:131071 Re:1523144 Rb:941356 Rf:3  => Rg:131068
+IP: 27 jnz g 2      Rc:1523146 Rg:131068 Rd:1 Ra:0 Rh:131071 Re:1523144 Rb:941356 Rf:3 
+IP: 29 set g d      Rc:1523146 Rg:131068 Rd:1 Ra:0 Rh:131071 Re:1523144 Rb:941356 Rf:3  => Rg:1
+IP: 30 sub g e      Rc:1523146 Rg:1 Rd:1 Ra:0 Rh:131071 Re:1523144 Rb:941356 Rf:3  => Rg:-1523143
+IP: 31 jnz g 2      Rc:1523146 Rg:-1523143 Rd:1 Ra:0 Rh:131071 Re:1523144 Rb:941356 Rf:3 
+IP: 33 sub e 1      Rc:1523146 Rg:-1523143 Rd:1 Ra:0 Rh:131071 Re:1523144 Rb:941356 Rf:3  => Re:1523143
+IP: 34 jnz 1 -10    Rc:1523146 Rg:-1523143 Rd:1 Ra:0 Rh:131071 Re:1523143 Rb:941356 Rf:3 
+IP: 24 sub f -1     Rc:1523146 Rg:-1523143 Rd:1 Ra:0 Rh:131071 Re:1523143 Rb:941356 Rf:3  => Rf:4
+IP: 25 set g h      Rc:1523146 Rg:-1523143 Rd:1 Ra:0 Rh:131071 Re:1523143 Rb:941356 Rf:4  => Rg:131071
+IP: 26 sub g f      Rc:1523146 Rg:131071 Rd:1 Ra:0 Rh:131071 Re:1523143 Rb:941356 Rf:4  => Rg:131067
+IP: 27 jnz g 2      Rc:1523146 Rg:131067 Rd:1 Ra:0 Rh:131071 Re:1523143 Rb:941356 Rf:4 
+IP: 29 set g d      Rc:1523146 Rg:131067 Rd:1 Ra:0 Rh:131071 Re:1523143 Rb:941356 Rf:4  => Rg:1
+IP: 30 sub g e      Rc:1523146 Rg:1 Rd:1 Ra:0 Rh:131071 Re:1523143 Rb:941356 Rf:4  => Rg:-1523142
+IP: 31 jnz g 2      Rc:1523146 Rg:-1523142 Rd:1 Ra:0 Rh:131071 Re:1523143 Rb:941356 Rf:4 
+IP: 33 sub e 1      Rc:1523146 Rg:-1523142 Rd:1 Ra:0 Rh:131071 Re:1523143 Rb:941356 Rf:4  => Re:1523142
+IP: 34 jnz 1 -10    Rc:1523146 Rg:-1523142 Rd:1 Ra:0 Rh:131071 Re:1523142 Rb:941356 Rf:4 
+IP: 24 sub f -1     Rc:1523146 Rg:-1523142 Rd:1 Ra:0 Rh:131071 Re:1523142 Rb:941356 Rf:4  => Rf:5
+IP: 25 set g h      Rc:1523146 Rg:-1523142 Rd:1 Ra:0 Rh:131071 Re:1523142 Rb:941356 Rf:5  => Rg:131071
+IP: 26 sub g f      Rc:1523146 Rg:131071 Rd:1 Ra:0 Rh:131071 Re:1523142 Rb:941356 Rf:5  => Rg:131066
+IP: 27 jnz g 2      Rc:1523146 Rg:131066 Rd:1 Ra:0 Rh:131071 Re:1523142 Rb:941356 Rf:5 
+IP: 29 set g d      Rc:1523146 Rg:131066 Rd:1 Ra:0 Rh:131071 Re:1523142 Rb:941356 Rf:5  => Rg:1
+IP: 30 sub g e      Rc:1523146 Rg:1 Rd:1 Ra:0 Rh:131071 Re:1523142 Rb:941356 Rf:5  => Rg:-1523141
+IP: 31 jnz g 2      Rc:1523146 Rg:-1523141 Rd:1 Ra:0 Rh:131071 Re:1523142 Rb:941356 Rf:5 
+IP: 33 sub e 1      Rc:1523146 Rg:-1523141 Rd:1 Ra:0 Rh:131071 Re:1523142 Rb:941356 Rf:5  => Re:1523141
+IP: 34 jnz 1 -10    Rc:1523146 Rg:-1523141 Rd:1 Ra:0 Rh:131071 Re:1523141 Rb:941356 Rf:5 
+IP: 24 sub f -1     Rc:1523146 Rg:-1523141 Rd:1 Ra:0 Rh:131071 Re:1523141 Rb:941356 Rf:5  => Rf:6
+IP: 25 set g h      Rc:1523146 Rg:-1523141 Rd:1 Ra:0 Rh:131071 Re:1523141 Rb:941356 Rf:6  => Rg:131071
+IP: 26 sub g f      Rc:1523146 Rg:131071 Rd:1 Ra:0 Rh:131071 Re:1523141 Rb:941356 Rf:6  => Rg:131065
+IP: 27 jnz g 2      Rc:1523146 Rg:131065 Rd:1 Ra:0 Rh:131071 Re:1523141 Rb:941356 Rf:6 
+IP: 29 set g d      Rc:1523146 Rg:131065 Rd:1 Ra:0 Rh:131071 Re:1523141 Rb:941356 Rf:6  => Rg:1
+IP: 30 sub g e      Rc:1523146 Rg:1 Rd:1 Ra:0 Rh:131071 Re:1523141 Rb:941356 Rf:6  => Rg:-1523140
+IP: 31 jnz g 2      Rc:1523146 Rg:-1523140 Rd:1 Ra:0 Rh:131071 Re:1523141 Rb:941356 Rf:6 
+IP: 33 sub e 1      Rc:1523146 Rg:-1523140 Rd:1 Ra:0 Rh:131071 Re:1523141 Rb:941356 Rf:6  => Re:1523140
+IP: 34 jnz 1 -10    Rc:1523146 Rg:-1523140 Rd:1 Ra:0 Rh:131071 Re:1523140 Rb:941356 Rf:6 
+IP: 24 sub f -1     Rc:1523146 Rg:-1523140 Rd:1 Ra:0 Rh:131071 Re:1523140 Rb:941356 Rf:6  => Rf:7
+IP: 25 set g h      Rc:1523146 Rg:-1523140 Rd:1 Ra:0 Rh:131071 Re:1523140 Rb:941356 Rf:7  => Rg:131071
+IP: 26 sub g f      Rc:1523146 Rg:131071 Rd:1 Ra:0 Rh:131071 Re:1523140 Rb:941356 Rf:7  => Rg:131064
+IP: 27 jnz g 2      Rc:1523146 Rg:131064 Rd:1 Ra:0 Rh:131071 Re:1523140 Rb:941356 Rf:7 
+IP: 29 set g d      Rc:1523146 Rg:131064 Rd:1 Ra:0 Rh:131071 Re:1523140 Rb:941356 Rf:7  => Rg:1
+IP: 30 sub g e      Rc:1523146 Rg:1 Rd:1 Ra:0 Rh:131071 Re:1523140 Rb:941356 Rf:7  => Rg:-1523139
+IP: 31 jnz g 2      Rc:1523146 Rg:-1523139 Rd:1 Ra:0 Rh:131071 Re:1523140 Rb:941356 Rf:7 
+IP: 33 sub e 1      Rc:1523146 Rg:-1523139 Rd:1 Ra:0 Rh:131071 Re:1523140 Rb:941356 Rf:7  => Re:1523139
+IP: 34 jnz 1 -10    Rc:1523146 Rg:-1523139 Rd:1 Ra:0 Rh:131071 Re:1523139 Rb:941356 Rf:7 
+IP: 24 sub f -1     Rc:1523146 Rg:-1523139 Rd:1 Ra:0 Rh:131071 Re:1523139 Rb:941356 Rf:7  => Rf:8
+IP: 25 set g h      Rc:1523146 Rg:-1523139 Rd:1 Ra:0 Rh:131071 Re:1523139 Rb:941356 Rf:8  => Rg:131071
+IP: 26 sub g f      Rc:1523146 Rg:131071 Rd:1 Ra:0 Rh:131071 Re:1523139 Rb:941356 Rf:8  => Rg:131063
+IP: 27 jnz g 2      Rc:1523146 Rg:131063 Rd:1 Ra:0 Rh:131071 Re:1523139 Rb:941356 Rf:8 
+IP: 29 set g d      Rc:1523146 Rg:131063 Rd:1 Ra:0 Rh:131071 Re:1523139 Rb:941356 Rf:8  => Rg:1
+IP: 30 sub g e      Rc:1523146 Rg:1 Rd:1 Ra:0 Rh:131071 Re:1523139 Rb:941356 Rf:8  => Rg:-1523138
+IP: 31 jnz g 2      Rc:1523146 Rg:-1523138 Rd:1 Ra:0 Rh:131071 Re:1523139 Rb:941356 Rf:8 
+IP: 33 sub e 1      Rc:1523146 Rg:-1523138 Rd:1 Ra:0 Rh:131071 Re:1523139 Rb:941356 Rf:8  => Re:1523138
+IP: 34 jnz 1 -10    Rc:1523146 Rg:-1523138 Rd:1 Ra:0 Rh:131071 Re:1523138 Rb:941356 Rf:8 
+IP: 24 sub f -1     Rc:1523146 Rg:-1523138 Rd:1 Ra:0 Rh:131071 Re:1523138 Rb:941356 Rf:8  => Rf:9
+IP: 25 set g h      Rc:1523146 Rg:-1523138 Rd:1 Ra:0 Rh:131071 Re:1523138 Rb:941356 Rf:9  => Rg:131071
+IP: 26 sub g f      Rc:1523146 Rg:131071 Rd:1 Ra:0 Rh:131071 Re:1523138 Rb:941356 Rf:9  => Rg:131062
+IP: 27 jnz g 2      Rc:1523146 Rg:131062 Rd:1 Ra:0 Rh:131071 Re:1523138 Rb:941356 Rf:9 
+IP: 29 set g d      Rc:1523146 Rg:131062 Rd:1 Ra:0 Rh:131071 Re:1523138 Rb:941356 Rf:9  => Rg:1
+IP: 30 sub g e      Rc:1523146 Rg:1 Rd:1 Ra:0 Rh:131071 Re:1523138 Rb:941356 Rf:9  => Rg:-1523137
+IP: 31 jnz g 2      Rc:1523146 Rg:-1523137 Rd:1 Ra:0 Rh:131071 Re:1523138 Rb:941356 Rf:9 
+IP: 33 sub e 1      Rc:1523146 Rg:-1523137 Rd:1 Ra:0 Rh:131071 Re:1523138 Rb:941356 Rf:9  => Re:1523137
+IP: 34 jnz 1 -10    Rc:1523146 Rg:-1523137 Rd:1 Ra:0 Rh:131071 Re:1523137 Rb:941356 Rf:9 
+IP: 24 sub f -1     Rc:1523146 Rg:-1523137 Rd:1 Ra:0 Rh:131071 Re:1523137 Rb:941356 Rf:9  => Rf:10
+IP: 25 set g h      Rc:1523146 Rg:-1523137 Rd:1 Ra:0 Rh:131071 Re:1523137 Rb:941356 Rf:10  => Rg:131071
+IP: 26 sub g f      Rc:1523146 Rg:131071 Rd:1 Ra:0 Rh:131071 Re:1523137 Rb:941356 Rf:10  => Rg:131061
+IP: 27 jnz g 2      Rc:1523146 Rg:131061 Rd:1 Ra:0 Rh:131071 Re:1523137 Rb:941356 Rf:10 
+IP: 29 set g d      Rc:1523146 Rg:131061 Rd:1 Ra:0 Rh:131071 Re:1523137 Rb:941356 Rf:10  => Rg:1
+IP: 30 sub g e      Rc:1523146 Rg:1 Rd:1 Ra:0 Rh:131071 Re:1523137 Rb:941356 Rf:10  => Rg:-1523136
+IP: 31 jnz g 2      Rc:1523146 Rg:-1523136 Rd:1 Ra:0 Rh:131071 Re:1523137 Rb:941356 Rf:10 
+IP: 33 sub e 1      Rc:1523146 Rg:-1523136 Rd:1 Ra:0 Rh:131071 Re:1523137 Rb:941356 Rf:10  => Re:1523136
+IP: 34 jnz 1 -10    Rc:1523146 Rg:-1523136 Rd:1 Ra:0 Rh:131071 Re:1523136 Rb:941356 Rf:10 
+IP: 24 sub f -1     Rc:1523146 Rg:-1523136 Rd:1 Ra:0 Rh:131071 Re:1523136 Rb:941356 Rf:10  => Rf:11
+IP: 25 set g h      Rc:1523146 Rg:-1523136 Rd:1 Ra:0 Rh:131071 Re:1523136 Rb:941356 Rf:11  => Rg:131071
+IP: 26 sub g f      Rc:1523146 Rg:131071 Rd:1 Ra:0 Rh:131071 Re:1523136 Rb:941356 Rf:11  => Rg:131060
+IP: 27 jnz g 2      Rc:1523146 Rg:131060 Rd:1 Ra:0 Rh:131071 Re:1523136 Rb:941356 Rf:11 
+IP: 29 set g d      Rc:1523146 Rg:131060 Rd:1 Ra:0 Rh:131071 Re:1523136 Rb:941356 Rf:11  => Rg:1
+IP: 30 sub g e      Rc:1523146 Rg:1 Rd:1 Ra:0 Rh:131071 Re:1523136 Rb:941356 Rf:11  => Rg:-1523135
+IP: 31 jnz g 2      Rc:1523146 Rg:-1523135 Rd:1 Ra:0 Rh:131071 Re:1523136 Rb:941356 Rf:11 
+IP: 33 sub e 1      Rc:1523146 Rg:-1523135 Rd:1 Ra:0 Rh:131071 Re:1523136 Rb:941356 Rf:11  => Re:1523135
+IP: 34 jnz 1 -10    Rc:1523146 Rg:-1523135 Rd:1 Ra:0 Rh:131071 Re:1523135 Rb:941356 Rf:11 
+IP: 24 sub f -1     Rc:1523146 Rg:-1523135 Rd:1 Ra:0 Rh:131071 Re:1523135 Rb:941356 Rf:11  => Rf:12
+IP: 25 set g h      Rc:1523146 Rg:-1523135 Rd:1 Ra:0 Rh:131071 Re:1523135 Rb:941356 Rf:12  => Rg:131071
+IP: 26 sub g f      Rc:1523146 Rg:131071 Rd:1 Ra:0 Rh:131071 Re:1523135 Rb:941356 Rf:12  => Rg:131059
+IP: 27 jnz g 2      Rc:1523146 Rg:131059 Rd:1 Ra:0 Rh:131071 Re:1523135 Rb:941356 Rf:12 
+IP: 29 set g d      Rc:1523146 Rg:131059 Rd:1 Ra:0 Rh:131071 Re:1523135 Rb:941356 Rf:12  => Rg:1
+IP: 30 sub g e      Rc:1523146 Rg:1 Rd:1 Ra:0 Rh:131071 Re:1523135 Rb:941356 Rf:12  => Rg:-1523134
+IP: 31 jnz g 2      Rc:1523146 Rg:-1523134 Rd:1 Ra:0 Rh:131071 Re:1523135 Rb:941356 Rf:12 
+IP: 33 sub e 1      Rc:1523146 Rg:-1523134 Rd:1 Ra:0 Rh:131071 Re:1523135 Rb:941356 Rf:12  => Re:1523134
+IP: 34 jnz 1 -10    Rc:1523146 Rg:-1523134 Rd:1 Ra:0 Rh:131071 Re:1523134 Rb:941356 Rf:12 
+IP: 24 sub f -1     Rc:1523146 Rg:-1523134 Rd:1 Ra:0 Rh:131071 Re:1523134 Rb:941356 Rf:12  => Rf:13
+IP: 25 set g h      Rc:1523146 Rg:-1523134 Rd:1 Ra:0 Rh:131071 Re:1523134 Rb:941356 Rf:13  => Rg:131071
+IP: 26 sub g f      Rc:1523146 Rg:131071 Rd:1 Ra:0 Rh:131071 Re:1523134 Rb:941356 Rf:13  => Rg:131058
+IP: 27 jnz g 2      Rc:1523146 Rg:131058 Rd:1 Ra:0 Rh:131071 Re:1523134 Rb:941356 Rf:13 
+IP: 29 set g d      Rc:1523146 Rg:131058 Rd:1 Ra:0 Rh:131071 Re:1523134 Rb:941356 Rf:13  => Rg:1
+IP: 30 sub g e      Rc:1523146 Rg:1 Rd:1 Ra:0 Rh:131071 Re:1523134 Rb:941356 Rf:13  => Rg:-1523133
+IP: 31 jnz g 2      Rc:1523146 Rg:-1523133 Rd:1 Ra:0 Rh:131071 Re:1523134 Rb:941356 Rf:13 
+IP: 33 sub e 1      Rc:1523146 Rg:-1523133 Rd:1 Ra:0 Rh:131071 Re:1523134 Rb:941356 Rf:13  => Re:1523133
+IP: 34 jnz 1 -10    Rc:1523146 Rg:-1523133 Rd:1 Ra:0 Rh:131071 Re:1523133 Rb:941356 Rf:13 
+IP: 24 sub f -1     Rc:1523146 Rg:-1523133 Rd:1 Ra:0 Rh:131071 Re:1523133 Rb:941356 Rf:13  => Rf:14
+IP: 25 set g h      Rc:1523146 Rg:-1523133 Rd:1 Ra:0 Rh:131071 Re:1523133 Rb:941356 Rf:14  => Rg:131071
+IP: 26 sub g f      Rc:1523146 Rg:131071 Rd:1 Ra:0 Rh:131071 Re:1523133 Rb:941356 Rf:14  => Rg:131057
+IP: 27 jnz g 2      Rc:1523146 Rg:131057 Rd:1 Ra:0 Rh:131071 Re:1523133 Rb:941356 Rf:14 
+IP: 29 set g d      Rc:1523146 Rg:131057 Rd:1 Ra:0 Rh:131071 Re:1523133 Rb:941356 Rf:14  => Rg:1
+IP: 30 sub g e      Rc:1523146 Rg:1 Rd:1 Ra:0 Rh:131071 Re:1523133 Rb:941356 Rf:14  => Rg:-1523132
+IP: 31 jnz g 2      Rc:1523146 Rg:-1523132 Rd:1 Ra:0 Rh:131071 Re:1523133 Rb:941356 Rf:14 
+IP: 33 sub e 1      Rc:1523146 Rg:-1523132 Rd:1 Ra:0 Rh:131071 Re:1523133 Rb:941356 Rf:14  => Re:1523132
+IP: 34 jnz 1 -10    Rc:1523146 Rg:-1523132 Rd:1 Ra:0 Rh:131071 Re:1523132 Rb:941356 Rf:14 

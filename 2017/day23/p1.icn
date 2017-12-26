@@ -30,13 +30,13 @@ procedure main(args)
 	IP := 1
 
 	mulcount := 0
-	regs["a"] := 0
+	regs["a"] := 1
 	repeat {
 		if IP > *mem then break
 		i := mem[IP]
-		#writes("IP:",IP," ",i.op," ",i.p1," ",i.p2," ")
-		#every r := key(regs) do writes("R",r,":",regs[r]," ")
-		#write()
+		writes(left("IP:"||right(IP,3)||" "||i.op||" "||i.p1||" "||i.p2,20))
+		every r := key(regs) do writes("R",r,":",regs[r]," ")
+
 		IP +:= 1
 		
 		case i.op of {
@@ -65,8 +65,15 @@ procedure main(args)
 			}
 				
  			default: break
+
 		}
+		if i.op[1] ~== "j" & not integer(i.p1) then writes(" => R",i.p1,":",regs[i.p1])
+		write()
+ 		
 	}
+	every r := key(regs) do writes("R",r,":",regs[r]," ")
+	write()
+	exit()
 	write("mulcount=",mulcount)
 
 	# Part 2 - hand optimized..  calculate # of composite numbers between

@@ -1,0 +1,100 @@
+set b 86                        b = 86
+set c b                         c = b
+set f 17                        f = 17
+jnz a 2                         if a ~= 0 then L6
+jnz 1 10                        goto L15
+set a 10                L6:     a = 10
+set g 0                 L7:     g = 0
+sub g c                         g -= c
+sub b g                         b -= g
+set g 0                         g = 0 
+sub g b                         g -= b
+sub c g                         c -= g
+sub a 1                         a -= 1
+jnz a -7                        if a ~= 0 L7
+set h 1                 L15:    h = 1
+set g 0                 L16:    g = 0
+sub g h                         g -= h
+sub h g                         h -= g
+sub f 1                         f -= 1
+jnz f -4                        if f ~= 0 L16
+sub h 1                         h -= 1
+set d 1                         d = 1
+set e c                 L23:    e = c
+sub f -1                L24:    f += 1
+set g h                         g = h
+sub g f                         g -=f
+jnz g 2                         if g ~= 0 L29
+sub f h                         f -= h 
+set g d                 L29:    g = d
+sub g e                         g -= e
+jnz g 2                         if g ~= 0 then L33
+jnz 1 3                         goto L35
+sub e 1                 L33:    e -= 1
+jnz 1 -10                       if e ~= 0 then L24
+set g b                         g = b
+sub g d                         g -= d
+jnz g 2                         if g ~= 0 then L39
+jnz 1 3                         goto END
+sub d -1                L39:    d -= 1
+jnz 1 -17                       goto L23
+
+        b = 86
+        c = b
+        f = 17
+        if a = 0 then L5
+    
+
+
+###########
+#    g work
+#    b = 86
+#    c = 86
+
+L6:     a = 10                  for(a=10;a~=0;a--)
+    L7:     g = 0                   b += c
+            g -= c                  
+            b -= g
+            g = 0                   c += b
+            g -= b
+            c -= g
+            a -= 1
+            if a ~= 0 L7
+#   a = 0
+#   b = 941356   (86 * 10946)
+#   c = 1523146  (86 * 17711) 
+#
+#########
+
+
+#########
+#   h = 1 
+#   f = 17
+#
+
+L15:    h = 1                       for(h=1;f;f++) h+=h
+    L16:    g = 0                   
+            g -= h
+            h -= g                  h += h
+            f -= 1
+            if f ~= 0 L16
+        h -= 1
+# f = 0
+# h = 131071 ( 2^17 -1 )
+###############
+
+
+
+
+
+        d = 1                               for (d = 1;d ~= b; d++)
+L23:    e = c                                   e = c
+        L24:    f += 1                          f += 1
+                if h = f then f -= h            if h = f then f -= h
+        L29:    
+                if d = e then L35               if e ~= d then
+        L33:    e -= 1                             e -:= 1
+                if e ~= 0 then L24
+                if b = d then END
+                d += 1
+        goto L23
