@@ -1,0 +1,144 @@
+
+link ximage
+record inst(op,p1,p2)
+
+procedure main(args)
+	inf := open(args[1],"r")
+	mem := []
+	
+	ws := ' \t'
+	while line := trim(!inf) do {
+		line ? {
+			i := inst("","","")
+			i.op := tab(upto(ws))
+			tab(many(ws))
+			i.p1 := tab(upto(ws) | 0)
+			tab(many(ws))
+			if not pos(0) then
+				i.p2 := tab(upto(ws)|0)
+			i.p1 := integer(i.p1)
+			i.p2 := integer(i.p2)
+			put(mem,i)
+		}
+	}
+	close(inf)
+
+ 	#xdump(mem)
+	regs := table(0)
+	curfreq := 0
+	
+	IP := 1
+
+	mulcount := 0
+	regs["a"] := 0
+	repeat {
+		if IP > *mem then break
+		i := mem[IP]
+		#writes("IP:",IP," ",i.op," ",i.p1," ",i.p2," ")
+		#every r := key(regs) do writes("R",r,":",regs[r]," ")
+		#write()
+		IP +:= 1
+		
+		case i.op of {
+			"snd": curfreq    := integer(i.p1) | integer(regs[i.p1])
+			"set": regs[i.p1] := integer(i.p2) | integer(regs[i.p2])
+			"add": regs[i.p1] +:= integer(i.p2) | integer(regs[i.p2])
+			"sub": regs[i.p1] -:= integer(i.p2) | integer(regs[i.p2])
+			"mul": {
+				regs[i.p1] *:= integer(i.p2) | integer(regs[i.p2])
+				mulcount +:= 1
+				}
+			"mod": regs[i.p1] %:= integer(i.p2) | integer(regs[i.p2])
+			"rcv": {
+				if regs[i.p1] > 0 then {
+					regs[i.p1] := curfreq
+					break
+				}
+			}
+			"jnz": {
+				if (integer(i.p1) | integer(regs[i.p1])) ~= 0 then 
+					IP := (IP-1) +  (integer(i.p2) | integer(regs[i.p2])) 
+			}
+			"jgz": {
+				if (integer(i.p1) | integer(regs[i.p1])) > 0 then 
+					IP := (IP-1) +  (integer(i.p2) | integer(regs[i.p2])) 
+			}
+				
+ 			default: break
+		}
+	}
+	write("mulcount=",mulcount)
+
+	# Part 2 - hand optimized..  calculate # of composite numbers between
+	# given inputs.
+	# analyzing the original program (see below)
+	count  := 0
+	
+	every v := 106700 to 123700 by 17 do {
+		every t := 2 to v-1 do
+			if v % t = 0 then {
+				count +:= 1	# Is composite number..
+				break
+			}
+	}
+	write("h=",count)
+end
+# Analysis of given input.
+
+# set b 67                    b = 67
+# set c b                     c = b
+# jnz a 2                     if a ~= 0 then goto L5
+# jnz 1 5                     goto L9
+# mul b 100              L5:  b *= 100 
+# sub b -100000               b -= -100000
+# set c b                     c = b
+# sub c -17000                c -= -17000
+# set f 1                L9:  f = 1							# Top of Loop 1 (b = start # to c by 17) & Loop 2 (d=2 to b)
+# set d 2                     d = 2
+# set e 2                L11: e = 2							# Top of Loop 3 (e = 2 to b)  ... Loop could be replaced by mod instr
+# set g d                L12: g = d 						# if e*d                          set g b 
+# mul g e                     g *= e 						#   ...                           mod g d
+# sub g b                     g -= b 						#    = b                          jnz g <bottom of loop 2> 
+# jnz g 2                     if g ~= 0 then goto L17       #                                 set f 0         
+# set f 0                     f = 0 						# then f = 0                      jnz 1 <bottom of loop 1>
+# sub e -1               L17: e -= -1 						# Bottom of Loop 3                <bottom of loop 2>
+# set g e                     g = e
+# sub g b                     g -= b
+# jnz g -8                    if g ~= 0 then goto L12
+# sub d -1                    d -= -1						# Bottom of Loop 2
+# set g d                     g = d
+# sub g b                     g -= b
+# jnz g -13                   if g ~= 0 then goto L11
+# jnz f 2                     if f ~= 0 then goto L27       # if f = 0
+# sub h -1                    h -= -1  						#   incr counter
+# set g b                L27: g = b
+# sub g c                     g -= c
+# jnz g 2                     if g ~= 0 then goto L31       # Bottom of Loop 1
+# jnz 1 3                     goto END
+# sub b -17              L31: b -= -17						
+# jnz 1 -23                   goto L9
+# 
+
+# Register usage:
+# a is debug flag
+# h is counter
+# f is a flag
+# g is work reg
+# b is starting number
+# c is ending number
+# e is inner loop variable
+# d is outer loop variable
+# 
+
+
+
+#      for(b= 106700); b ~= 123700; b+= 17) {
+#         f = 1
+#         for( d=2; d < b; d++) {
+#             for (e=2; e < b; e++ ) {     # inner loop replace 
+#                 if d*e = b then f = 0    # with mod instr
+#             }
+#         } 
+#         if f = 0 then h += 1  
+#     }
+# 
