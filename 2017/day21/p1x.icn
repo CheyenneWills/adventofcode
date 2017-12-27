@@ -1,0 +1,103 @@
+
+record pattern(in,out)
+procedure main(args)
+  
+    pmaps := table()
+    pmaps[5] := ["12,34",
+                ["12,34", "34,12", "21,43",   # Identity
+                 "31,42", "42,31", "13,24",   # 90
+                 "43,21", "21,43", "34,12",   # 180
+                 "24,13", "13,24", "42,31"    # 270
+                  ]]  
+    pmaps[11] := ["123,456,789",
+                 ["123,456,789","789,456,123", "321,654,987",  # Identity
+                  "741,852,963","963,852,741", "147,258,369",  # 90
+                  "987,654,321","321,654,987", "789,456,123",  # 180
+                  "369,258,147","147,258,369", "963,852,741"   # 270 
+                 ]]    
+  
+    inf := open(args[1],"r")
+    patterns := table()
+    every l := !inf do
+        l ? {
+            p1 := trim(tab(find("=>"))) | next
+            ="=>"
+            tab(many(' \t'))
+            p2 := []
+            while not pos(0) do {
+                put(p2,tab(upto('/') | 0))
+                move(1)
+            }
+            mapin := pmaps[*p1][1]
+            mapt := pmaps[*p1][2]
+            every patterns[map(!mapt,mapin,p1)] := p2
+
+           # every push(patterns,pattern(map(!mapt,mapin,p1),p2))
+        }
+
+    block := [".#.",
+              "..#",
+              "###"]
+
+    prtblock(block)
+    
+    every n:= 1 to 18 do {
+        block := newblock(patterns,block)
+        #prtblock(block)
+        count := 0
+    }
+
+    every l := !block do
+        every find("#",l) do count +:= 1
+    write(n," ",count)
+end
+
+procedure prtblock(block)
+    write("+",repl("-",*block),"+")
+    every write("|",!block,"|") 
+    write("+",repl("-",*block),"+")
+end
+
+
+procedure newblock(patterns,block)
+    newblocks := list()
+    every put(newblocks,patmatch(patterns,getcell(block)))
+      
+    return mergecells(newblocks)
+end
+
+procedure patmatch(patterns,cell)
+    cellstr := ""
+    every cellstr ||:= !cell || "/"
+    cellstr[-1] := ""
+    return \patterns[cellstr]
+end
+
+procedure mergecells(blist)
+    bsize := integer(sqrt(*blist))      
+    csize := *blist[1]
+    block := list(csize*bsize,"")
+
+    every i := 1 to bsize do 
+      every j := 1 to csize do 
+        every k := 1 to bsize do 
+          block[(i-1)*csize + j] ||:= blist[(i-1)*bsize + k][j]
+         
+    return block
+end
+
+procedure getcell(block)
+    if *block % 2 = 0 then csize := 2
+    else csize := 3
+
+    bsize := *block / csize 
+
+    every i := 1 to bsize do 
+      every j := 1 to bsize do {
+        cell := list(csize)
+        every k := 1 to csize do 
+          cell[k] := block[(i-1)*csize+k][(j-1)*csize+1+:csize]
+        suspend cell
+      }
+end
+
