@@ -1,0 +1,13 @@
+procedure main(args)
+    b := args[1]
+    c := b
+    o := b
+    every a := 10 to 0 by -1 do {
+        write("a=",a," b=",b," c=",c," c/",o,"=",c/o)
+        b +:= c
+        c +:= b
+    }
+    write("a=",a," b=",b," c=",c)
+    
+    
+end

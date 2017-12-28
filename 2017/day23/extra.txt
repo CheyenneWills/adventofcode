@@ -51,7 +51,7 @@ jnz 1 -17                       goto L23
 #    b = 86
 #    c = 86
 
-L6:     a = 10                  for(a=10;a~=0;a--)
+L6:     a = 10                  for(a=10;a~=0;a--)  A001906     F(2n) = bisection of Fibonacci sequence: a(n) = 3*a(n-1) - a(n-2). 
     L7:     g = 0                   b += c
             g -= c                  
             b -= g

@@ -43,10 +43,11 @@ procedure main(args)
         block := newblock(patterns,block)
         #prtblock(block)
         count := 0
-        every l := !block do
-            every find("#",l) do count +:= 1
-        write(n," ",count)
     }
+
+    every l := !block do
+        every find("#",l) do count +:= 1
+    write(n," ",count)
 end
 
 procedure prtblock(block)
