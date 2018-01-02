@@ -14,8 +14,16 @@ procedure main()
     dist := current[1].dist
     visited := copy(current[1].ab)
 
-    until *visited = *locations do {
+    write("--")
+    x := sortf(paths,2)
+    every p := !x do {
+        pl := sort(p.ab)
+        write(pl[1]," <",p.dist,"> ",pl[2])
+    }
+    write("--")
 
+    until *visited = *locations do {
+        dumppath(current)
         # Implement a greedy search
 
         ends := getfree_ends(current) # Find the two ends points
@@ -51,9 +59,11 @@ procedure main()
     write("distance is: ",dist)
 end
 procedure dumppath(l)
-    c := sort(l[1].ab -- l[2].ab)[1]
+    if *l = 1 then c := sort(l[1].ab)[1]
+    else c := sort(l[1].ab -- l[2].ab)[1]
+    
     every p := !l do {
-        writes(c," -- ",p.dist," -> ")
+        writes(c," <",p.dist,"> ")
         c := sort(p.ab -- set([c]))[1]
     }
     write(c)
@@ -108,7 +118,7 @@ procedure parse_input()
             tab(many(' \t'))
             ="="
             tab(many(' \t'))
-            d := tab(upto(' \t') | 0)
+            d := integer(tab(upto(' \t') | 0))
         }
         p := path(set([a,b]),d)
         /best := p
