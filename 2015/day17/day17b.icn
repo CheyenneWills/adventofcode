@@ -1,16 +1,15 @@
-procedure main()
-
+procedure main(args)
+	tsum := \args[1] | 150
 	containers := []
 	while put(containers,trim(read()))
 
-	clist := table()
+	clist := table(0)
 
 	every i := 1 to *containers do {
 		every l := combinations(containers,i) do {
 			sum := 0
 			every sum +:= !l
-			if sum = 150 then {
-				/clist[*l] := 0
+			if sum = tsum then {
 				clist[*l] +:= 1
 			}
 		}
