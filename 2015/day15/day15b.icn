@@ -22,10 +22,10 @@ procedure main()
 			calories +:= item[1].calories * item[2]
 		}
 		if calories ~= 500 then next
-		capacity <:= 1
-		durability <:= 1
-		flavor <:= 1
-		texture <:= 1
+		capacity <:= 0
+		durability <:= 0
+		flavor <:= 0
+		texture <:= 0
 		score := capacity * durability * flavor * texture
 		/best_score := score
 		/best := try
@@ -35,7 +35,9 @@ procedure main()
 		}
 	}
 	write(best_score)
-	xdump(best)
+	every item := !best do {
+		write(item[1].name," ",item[2])
+	}
 
 end
 procedure gen_amount(items,v)
