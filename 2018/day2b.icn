@@ -1,0 +1,64 @@
+procedure main()
+    inputs := []
+    while put(inputs,trim(read()))
+
+    every i := 1 to *inputs -1 do {
+        every j := i+1 to *inputs do {
+            a := inputs[i]
+            b := inputs[j]
+            d := levenshtein_distance(a,b)
+
+            if d = 1 then {
+                diff := cset(a) -- cset(b)
+                a[upto(diff,a)] := ""
+                write(a)
+                break break
+            }
+        }
+    }
+
+end
+
+procedure levenshtein_distance(s,t)
+    # set up a reusable matrix
+    static matrix
+    initial {
+        row := list(*t+1,0)
+        matrix := list(*s+1)
+        every i := 1 to *s+1 do matrix[i] := copy(row)
+    }
+
+    if *s = 0 then {
+        return *t
+    }
+    if *s = 0 then {
+        return *s
+    }
+    # Expand the matrix if needed
+    if *matrix[1] < *t+1 then {
+        row := list( *t - *matrix[1] + 1,0)
+        every i := 1 to *matrix do matrix[i] |||:= row
+    }
+    if *matrix < *s+1 then {
+        row := list( *matrix[1],0)
+        every i := 1 to *s - *matrix + 1 do put(matrix,copy(row))
+    }
+
+    # Initialize the matrix
+    every i := 1 to *s do matrix[i+1,1] := i
+    every i := 1 to *t do matrix[1,i+1] := i
+
+    every i := 1 to *s do {
+        every j := 1 to *t do {
+            if s[i] == t[j] then cost := 0
+            else cost := 1
+            I := i + 1
+            J := j + 1
+            a := matrix[I-1,J] +1
+            a >:= (matrix[I,J-1] +1)
+            a >:= (matrix[I-1,J-1] + cost)
+            matrix[I,J] := a
+        }
+    }
+    return matrix[*s+1,*t+1]
+end

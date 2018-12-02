@@ -1,0 +1,21 @@
+
+procedure main()
+    inputs := []
+    while put(inputs,trim(read()))
+
+    twocount := 0
+    threecount := 0
+
+    every line := !inputs do {
+        letter_count := table(0)
+
+        every letter_count[!line] +:= 1
+
+        if letter_count[!key(letter_count)] = 2 then twocount +:= 1
+        if letter_count[!key(letter_count)] = 3 then threecount +:= 1
+    }
+
+    write(twocount," ",threecount)
+    write(twocount*threecount)
+
+end
