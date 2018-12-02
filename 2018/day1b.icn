@@ -8,11 +8,10 @@ procedure main()
 
     repeat {
         every freq +:= !inputs do {
-            write(right(freq,20))
             if member(seen,freq) then break break
             insert(seen,freq)
         }
     }
-    write()
+
     write(freq)
 end
