@@ -104,7 +104,7 @@ procedure setup()
 	spells := [          #   cost damage heal armor mana duration
 		spell("Magic Missle",53,  4,     0,   0,    0,   1),
 		spell("Drain",       73,  2,     2,   0,    0,   1),
-		spell("Shield",      113, 0,     0,   7,    0    6),
+		spell("Shield",      113, 0,     0,   7,    0,   6),
 		spell("Poison",      173, 3,     0,   0,    0,   6),
 		spell("Recharge",    229, 0,     0,   0,   101,  5)
 	]

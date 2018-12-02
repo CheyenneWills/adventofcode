@@ -3,3 +3,9 @@
 !*/
 *debug*
 *test*
+*input.txt*
+*input.tst*
+*.so
+*.out
+*.icn
+!day*.icn

@@ -1,0 +1,29 @@
+    data('disc(name,weight,parent,childlist,chieldweight,balanced)')
+    bl = span(' ') | ''
+    
+    nodes = table()
+
+* Start main line
+    input(.in,1,'input.tst')
+
+readinput row = in                      :f(eof)
+    row ? bl breakx(' ') . n 
++         bl '(' breakx(')') . w ')' bl
++         (('->' bl rem . c )  | '' . c) :f(readinput)
+    
+    nodes[n] = disc(n,weight,'',c)      :(readinput)
+
+eof
+    
+    nodelist = convert(nodes,'ARRAY')
+    
+
+    i = 1
+maketree node = nodelist[i][2]          :f(endmaketree)
+    
+parsec   
+
+
+endmaketree
+    
+end

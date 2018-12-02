@@ -1,0 +1,18 @@
+procedure main()
+
+    freq := 0
+    inputs := []
+    seen := set([0])
+
+    while put(inputs,trim(read()))
+
+    repeat {
+        every freq +:= !inputs do {
+            write(right(freq,20))
+            if member(seen,freq) then break break
+            insert(seen,freq)
+        }
+    }
+    write()
+    write(freq)
+end

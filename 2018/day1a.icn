@@ -1,0 +1,5 @@
+procedure main()
+    freq := 0
+    while freq +:= trim(read())
+    write(freq)
+end
