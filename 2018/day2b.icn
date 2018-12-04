@@ -1,3 +1,4 @@
+link ximage
 procedure main()
     inputs := []
     while put(inputs,trim(read()))
@@ -7,11 +8,18 @@ procedure main()
             a := inputs[i]
             b := inputs[j]
             d := levenshtein_distance(a,b)
+            d2 := compdist(a,b)
+
+            write(a," ",b," levenshtein distance=",d)
+            write("compdist: lcs=",d2.lcs," lcg=",d2.lcg," lcgi=",d2.lcgi," lcgj",d2.lcgj)
+            dumpmatrix(d2.matrix)
+            write("-----")
 
             if d = 1 then {
                 diff := cset(a) -- cset(b)
                 a[upto(diff,a)] := ""
                 write(a)
+
                 break break
             }
         }
@@ -19,6 +27,75 @@ procedure main()
 
 end
 
+record lcslcg(lcs,lcg,lcgi,lcgj,matrix)
+
+# Compute the distance between two items
+# d(a,b) = length(a) + length(b) - 2q(a,b)
+# where q(a,b) is the longest common subsequence
+
+procedure compdist(a,b)
+    return LCSLCG(a,b)
+end
+
+
+# Compute the longest common subsequence and longest common substring
+
+link array
+
+procedure dumpmatrix(m)
+    every i := 1 to *m do {
+        every j := 1 to *m[i] do {
+            writes("(",right(m[i,j,1],3),",",right(m[i,j,2],3),") ")
+        }
+        write()
+    }
+end
+
+
+procedure LCSLCG(s,t)
+
+        r := lcslcg()
+
+        r.lcg := 0
+        r.lcgi := -1
+        r.lcgj := -1
+
+        r.matrix := list(*s+1)
+        every i := 1 to *s+1 do {
+            r.matrix[i] := list(*t+1)
+            every j := 1 to *t+1 do {
+                r.matrix[i,j] := [0,0]
+            }
+        }
+
+
+
+        every i := 1 to *s do {
+            every j := 1 to *t do {
+                I := i+1
+                J := j+1
+                if s[i] == t[j] then {
+                    r.matrix[I,J,1] := r.matrix[I-1,J-1,1] + 1     #  ref_array(r.matrix,i,j,1) := ref_array(r.matrix,i-1,j-1,1) + 1
+                    v := r.matrix[I-1,J-1,2] + 1                   #  v := ref_array(r.matrix,i-1,j-1,2] + 1
+                    r.matrix[I,J,2] := v                          #  ref_array(r.matrix,i,j,2) := v
+                    if r.lcg < v then {
+                        r.lcgi := i
+                        r.lcgj := j
+                        r.lcg  := v
+                    }
+                }
+                else  {
+                    if r.matrix[I-1,J,1] >= r.matrix[I,J-1,1] then { # ref_array(r.matrix,i-1,j,1) >= ref_array(r.matrix,i,j-1,1)
+                        r.matrix[I,J,1] := r.matrix[I-1,J,1]         # ref_array(r.matrix,i,j,1) := ref_array(r.matrix,i-1,j,1);
+                    } else {
+                        r.matrix[I,J,1] := r.matrix[I,J-1,1]         # ref_array(r.matrix,i,j,1) := ref_array(r.matrix,i,j-1,1)
+                    }
+                }
+            }
+        }
+        r.lcs := r.matrix[*s+1,*t+1,1]
+        return r
+end
 procedure levenshtein_distance(s,t)
     # set up a reusable matrix
     static matrix
