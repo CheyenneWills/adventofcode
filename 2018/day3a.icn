@@ -1,0 +1,50 @@
+record claim(id,x,y,w,h)
+procedure main()
+
+    inputs := []
+
+    while l := trim(read()) do {
+        l ? {
+            c := claim()
+            c.id := tab(upto(' '))
+            tab(many(' '))
+            ="@"
+            tab(many(' '))
+            c.x := integer(tab(upto(',')))
+            =","
+            c.y := integer(tab(upto(':')))
+            =":"
+            tab(many(' '))
+            c.w := integer(tab(upto('x')))
+            ="x"
+            c.h := integer(tab(0))
+            put(inputs,c)
+        }
+    }
+    fabric := set()
+    overlaps := set()
+    every c := !inputs do {
+        every p := genPoints(c.x,c.y,c.h,c.w) do {
+            if member(fabric,p) then insert(overlaps,p)
+            insert(fabric,p)
+        }
+    }
+    # Day 1
+    write(*overlaps)
+
+
+    # Day 2
+    every c := !inputs do {
+        every p := genPoints(c.x,c.y,c.h,c.w) do {
+            if member(overlaps,p) then break next
+        }
+        write(c.id)
+        break
+    }
+end
+
+procedure genPoints(x,y,h,w)
+    every X := x+1 to x+w do
+        every Y := y+1 to y+h do
+            suspend X || "," || Y
+end
