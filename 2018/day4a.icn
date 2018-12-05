@@ -1,0 +1,103 @@
+record guard(id,elist,totalsleep,maxmin,minc)
+record night(id,ts,events)
+record TS(yy,MM,dd,hh,mm)
+
+procedure main()
+
+    input := []
+    guards := table()
+    while put(input,trim(read()))
+
+    input := sort(input)
+
+    sleepestguard := &null
+    mostmin := &null
+
+    every n := genEvents(input) do {
+
+        /guards[n.id] := guard(n.id,[],0,0,0)
+        /sleepestguard := n.id
+        /mostmin := n.id
+
+        put(guards[n.id].elist,n)
+
+        mmin := 0
+        every t := 1 to 60 do {
+            if n.events[t] == "#" then guards[n.id].totalsleep +:= 1
+            msleep := 0
+            every m := 1 to *guards[n.id].elist do {
+                if guards[n.id].elist[m].events[t] == "#" then msleep +:= 1
+            }
+            if mmin < msleep then {
+                guards[n.id].maxmin := t-1
+                guards[n.id].minc := msleep
+                mmin := msleep
+            }
+        }
+
+        if guards[sleepestguard].totalsleep < guards[n.id].totalsleep then
+            sleepestguard := n.id
+        if guards[mostmin].minc < guards[n.id].minc then
+            mostmin := n.id
+    }
+
+    #write("sleepest guard: #",guards[sleepestguard].id," ",guards[sleepestguard].totalsleep," ",guards[sleepestguard].maxmin)
+    write("part1 :",guards[sleepestguard].id*guards[sleepestguard].maxmin)
+
+    #write("most min guard: #",guards[mostmin].id," ",guards[mostmin].totalsleep," ",
+    #    guards[mostmin].maxmin," ",guards[mostmin].minc)
+    write("part2 :",guards[mostmin].id*guards[mostmin].maxmin)
+
+    #every g := key(guards) do
+    #    dumpg(guards[g])
+end
+
+procedure dumpg(g)
+    write("\n-----")
+    write("                000000000011111111112222222222333333333344444444445555555555")
+    write("                012345678901234567890123456789012345678901234567890123456789")
+    every n := !g.elist do {
+        write(right(n.ts.MM,2),"-",right(n.ts.dd,2),"  #",right(n.id,7),
+              " ",n.events)
+    }
+    write(g.totalsleep," ",g.maxmin," ",g.minc)
+end
+procedure genEvents(input)
+    current := &null
+    every l := !input do {
+        l ? {
+            ="["
+            ts := parseTS()
+            if ts.hh = 23 then {
+                ts.hh := 0
+                ts.mm := 0
+                ts.dd +:= 1
+            }
+            tab(many(' '))
+            case tab(upto(' ')) of {
+                "Guard": {
+                    suspend \current
+                    tab(upto('#'))
+                    ="#"
+                    current := night(tab(upto(' ')),ts,repl(".",60))
+                }
+                "falls":
+                    current.events[ts.mm+1:0] := repl('#',60-ts.mm)
+                "wakes":
+                    current.events[ts.mm+1:0] := repl(".",60-ts.mm)
+            }
+        }
+    }
+    suspend \current
+end
+
+procedure parseTS()
+    suspend TS(supto('-'),
+             supto('-'),
+             supto(' '),
+             supto(':'),
+             supto(']'))
+end
+procedure supto(delim)
+    suspend 1(tab(upto(delim)),tab(match(delim)))
+end
