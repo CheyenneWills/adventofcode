@@ -1,0 +1,70 @@
+
+record point(id,x,y,area,infinite)
+procedure main()
+    minx := maxx := miny := maxy := &null
+    inputs := []
+    id := 1
+    while l := trim(read()) do {
+        l ? {
+            x := integer(tab(upto(',')))
+            =","
+            y := integer(tab(0))
+            /minx := /maxx := x
+            /miny := /maxy := y
+            minx >:= x
+            maxx <:= x
+            miny >:= y
+            maxy <:= y
+            put(inputs,point(id,x,y,0,&null))
+            id +:= 1
+        }
+
+    }
+    minx -:= 1
+    miny -:= 1
+    maxx +:= 1
+    maxy +:= 1
+
+    total_area := 0
+    every y := miny to maxy do {
+        every x := minx to maxx do {
+            d := []
+            total_distance := 0
+            every p := !inputs do {
+                D := m_distance([x,y],[p.x,p.y])
+                total_distance +:= D
+                put(d, [D,p] )
+            }
+
+            # Part 1 test
+            # Find the closest coordinate
+            d := sortf(d,1)
+
+            if d[1,1] ~= d[2,1] then { # Make sure there is no tie.
+                # Mark coordinates that reach off to inf
+                if x = (minx | maxx) |
+                   y = (miny | maxy) then d[1,2].infinite := 1
+
+                d[1,2].area +:= 1
+            }
+
+            # Part 2 test
+            if total_distance < 10000 then total_area +:= 1
+        }
+    }
+
+    # Part 1 answer
+    arealist := []
+    every put(arealist,p := !inputs & /p.infinite & p.area)
+
+    arealist := sort(arealist)
+    # Take the biggest (last) one..
+    write(arealist[-1])
+
+    # Part 2 answer
+    write("total area:",total_area)
+end
+
+procedure m_distance(p,q)
+    return abs( p[1] - q[1] ) + abs(p[2] -q[2])
+end
