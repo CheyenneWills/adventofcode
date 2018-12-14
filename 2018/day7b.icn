@@ -1,0 +1,85 @@
+
+record step(id,psteps,nsteps)
+record helper(deadline,v)
+global steps
+
+procedure main()
+    steps := table()
+
+    while line := splitline(trim(read())) do {
+        id := line[2]
+        nstep := line[8]
+        /steps[id] := step(id,set(),set())
+        /steps[nstep] := step(nstep,set(),set())
+        insert(steps[id].nsteps,nstep)
+        insert(steps[nstep].psteps,id)
+    }
+    queue := set()
+    every id := key(steps) do {
+        if *steps[id].psteps = 0 then insert(queue,id)
+    }
+
+    processed := ""
+    pset := set()
+    helpers := []
+    every 1 to 5 do
+        put(helpers,helper(1000,&null))
+
+    t := 0
+    nexts := &null
+
+    repeat {
+        every h := !helpers & /h.v do {
+            /nexts := create(nextstep(queue,pset))
+            s := @nexts | break
+            h.v := s
+            h.deadline := t+ord(s)-ord("A")+1  +60
+            #write("::",h.deadline," ",h.v)
+            delete(queue,h.v)
+        }
+        nexts := &null
+        helpers := sortf(helpers,1)
+        writes("->",right(t,4)," ")
+        every x := !helpers do writes(\x.v|"."," ")
+        write(" [",processed,"]")
+
+        every h := !helpers & \h.v do break
+
+        if /h.v then break
+        t := h.deadline
+
+        insert(pset,h.v)
+
+        queue ++:= steps[h.v].nsteps
+        processed ||:= h.v
+        h.v := &null
+    }
+    write(t)
+    write(processed)
+end
+
+procedure nextstep(Q,p)
+    #write("queue:",dmp(Q)," Processed:",dmp(p))
+    #every s := key(steps) do {
+    #    write(steps[s].id,": ",dmp(steps[s].psteps)," - ",dmp(steps[s].nsteps))
+    #}
+    #write("--")
+
+
+    every s := !sort(Q) do {
+        if *(steps[s].psteps -- p) = 0 then suspend s
+    }
+end
+procedure dmp(s)
+    o := ""
+    every o ||:= !sort(s)
+    return o
+end
+procedure splitline(l)
+    r := []
+    l ? while not pos(0) do {
+            tab(many(' '))
+            put(r,tab(upto(' ')|0))
+    }
+    return r
+end
