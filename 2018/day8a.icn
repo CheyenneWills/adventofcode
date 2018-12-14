@@ -1,0 +1,25 @@
+procedure main()
+
+    s := trim(read())
+    mdata := 0
+    s ?  {
+        mdata +:= genMdata()
+    }
+    write(mdata)
+end
+
+procedure genMdata()
+    tab(many(' '))
+    nchildren := tab(many(&digits))
+    tab(many(' '))
+    nmetadata := tab(many(&digits))
+    mdata := 0
+    every 1 to nchildren do {
+        mdata +:= genMdata()
+    }
+    every 1 to nmetadata do {
+        tab(many(' '))
+        mdata +:= tab(many(&digits))
+    }
+    return mdata
+end

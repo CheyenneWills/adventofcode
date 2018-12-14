@@ -1,0 +1,34 @@
+procedure main()
+
+    s := trim(read())
+    s ? {
+        v := genMdata()
+    }
+    write(v)
+end
+
+procedure genMdata()
+    v := 0
+    tab(many(' '))
+    nchildren := tab(many(&digits))
+    tab(many(' '))
+    nmetadata := tab(many(&digits))
+    if nchildren > 0 then {
+        cvals := []
+        every 1 to nchildren do
+            put(cvals,genMdata())
+
+        every 1 to nmetadata do {
+            tab(many(' '))
+            i := tab(many(&digits))
+            if i <= *cvals then v +:= cvals[i]
+        }
+
+    } else {
+        every 1 to nmetadata do {
+            tab(many(' '))
+            v +:= tab(many(&digits))
+        }
+    }
+    return v
+end
