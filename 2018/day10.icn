@@ -1,0 +1,91 @@
+
+record point(x,y,vx,vy)
+procedure main()
+    points := []
+
+    numbs := '-' ++ &digits
+    while line := read() do {
+
+        line ? {
+            tab(upto(numbs))
+            x := tab(many(numbs))
+            tab(upto(numbs))
+            y := tab(many(numbs))
+            tab(upto(numbs))
+            vx := tab(many(numbs))
+            tab(upto(numbs))
+            vy := tab(many(numbs))
+
+            push(points,point(x,y,vx,vy))
+        }
+    }
+
+
+    X := list(*points)
+    Y := list(*points)
+
+    minD := &null
+
+    every t := seq() do {
+        nplane := plane
+        Cx := 0
+        Cy := 0
+        every i := 1 to *points do {
+            Cx +:= X[i] := points[i].x + t * points[i].vx
+            Cy +:= Y[i] := points[i].y + t * points[i].vy
+        }
+
+
+        # Compute the centroid
+        Cx := real(Cx)/*points
+        Cy := real(Cy)/*points
+        D := 0
+        # Compute the average distance to the centroid
+        every i := 1 to *points do {
+            D +:= dist(Cx,X[i],Cy,Y[i])
+        }
+        D := real(D)/*points
+        /minD := D
+        # write(right(t,5)," --------- MinD=,",minD," D=",D," (",real(Cx),",",real(Cy),")")
+
+        # Distances starting to grow away from the centroid?
+        if D > minD then break
+        minD >:= D
+    }
+
+    # Now write out the message
+    t -:= 1
+    minx := miny := maxx := maxy := &null
+    every i := 1 to *points do {
+        X[i] := points[i].x + t * points[i].vx
+        Y[i] := points[i].y + t * points[i].vy
+        /minx := X[i]
+        /maxx := X[i]
+        /miny := Y[i]
+        /maxy := Y[i]
+        minx >:= X[i]
+        maxx <:= X[i]
+        miny >:= Y[i]
+        maxy <:= Y[i]
+    }
+
+    xdim := maxx-minx + 1
+    ydim := maxy-miny + 1
+    plane := repl(".",xdim * ydim)
+    every i := 1 to *points do {
+        I := (X[i]-minx+1) + xdim * (Y[i]-miny)
+        plane[I] := "#"
+    }
+    every i:= 1 to ydim+1 do {
+        write(plane[ (i-1)*xdim + 1 +:xdim])
+    }
+    write()
+    write("time:",t)
+end
+
+procedure dist(x1,y1,x2,y2)
+    X := x2-x1
+    Y := y2-y1
+    return sqrt(X*X + Y*Y)
+end
+

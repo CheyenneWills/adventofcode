@@ -1,0 +1,70 @@
+
+# Note because of the size of the linked list, part2
+# needs to run with a ulimit -s unlimited
+# otherwise the icon interpreter will segfault
+# due to a stack overflow
+
+
+record marble(id,l,r)
+
+procedure main()
+    input := trim(read())
+
+    input ? {
+        nplayers := tab(many(&digits))
+        tab(upto(&digits))
+        nmarbles := integer(tab(many(&digits)))
+    }
+
+    write("Part1:",play(nplayers,nmarbles))
+    write("Part2:",play(nplayers,nmarbles*100))
+end
+
+procedure play(nplayers,nmarbles)
+    scores := list(nplayers,0)
+    nextmarble := 0
+
+    current := marble(nextmarble)
+    nextmarble +:= 1
+    current.r := current.l := current
+    head := current
+
+    repeat {
+        every e := 1 to nplayers do {
+            #dmp(head)
+            nm := marble(nextmarble)
+            nextmarble +:= 1
+            if nm.id > nmarbles then break break
+
+            if nm.id % 23 = 0 then {
+                scores[e] +:= nm.id
+                M := current
+                every 1 to 7 do M := M.l
+                M.l.r := M.r
+                M.r.l := M.l
+                current := M.r
+                scores[e] +:= M.id
+            } else {
+                nm.r := current.r.r
+                nm.l := current.r
+                nm.l.r := nm
+                nm.r.l := nm
+                current := nm
+
+            }
+
+        }
+    }
+    scores := sort(scores)
+    return scores[-1]
+end
+procedure dmp(h)
+    c := h
+    writes(c.id)
+    c := c.r
+    while c ~=== h do {
+        writes(" ",c.id)
+        c := c.r
+    }
+    write()
+end
