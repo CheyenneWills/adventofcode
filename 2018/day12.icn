@@ -29,18 +29,14 @@ procedure main()
         if upto('#',pots) <= rulelen then {
             O -:= rulelen
             pots[1:1] := repl(".",rulelen)
-            #write("adding to left")
         }
         if upto('#',pots,*pots-rulelen) then {
             pots ||:= repl(".",rulelen)
-            #write("adding to right")
         }
         npots := repl('.',*pots)
         every I := find(rule := !rules,pots) do {
-            #write(right(I,3)," [", pots[I+:rulelen],"] <",rule,"> =>",rulemap[rule])
             npots[I+C] := rulemap[rule]
         }
-        #erite(right(gen,4)," :",npots)
 
         pots := npots
         t := upto('#',pots)
@@ -48,8 +44,6 @@ procedure main()
         pots[1:t] := ""
         pots := trim(pots,".")
 
-        #write("[",opots,"]")
-        #write("<",pots,">")
         ncount := count(pots,O)
         write(right(gen,3)," ",right(ncount,5),right(O,5)," : ",pots)
         if gen = 20 then write("Count at generation 20 ",ncount)
