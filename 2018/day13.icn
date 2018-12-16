@@ -1,0 +1,68 @@
+link ximage
+record cart(dir,nturn,t)
+procedure main()
+
+    tracks := []
+    while put(tracks,trim(read()))
+
+    carts := list(*tracks)
+    every carts[i:= 1 to *carts] := list(*tracks[i])
+    intersections := list(3)
+    #                    ^v<>    # Current
+    intersections[1] := "<>v^"   # left
+    intersections[2] := "^v<>"   # straight
+    intersections[3] := "><^v"   # right
+
+    every r := 1 to *tracks do {
+        every c := upto('^v<>',tracks[r]) do {
+            carts[r,c] := cart(tracks[r,c],1,0)
+            tracks[r,c] := map(tracks[r,c],"^v<>","||--")
+        }
+    }
+
+    parta := &null
+    every tick := seq() do {
+        ncarts := 0
+        every i := 1 to *carts do {
+            every j := 1 to *carts[i] & \carts[i,j] & carts[i,j].t ~= tick do {
+                # Clean up any dead carts..
+                if carts[i,j].dir == "X" then {
+                    carts[i,j] := &null
+                    next
+                }
+                di := dj := 0
+                carts[i,j].t := tick
+                case carts[i,j].dir of {
+                    "^" : di := -1
+                    "v" : di := +1
+                    ">" : dj := +1
+                    "<" : dj := -1
+                }
+
+                carts[i,j] :=: /carts[i+di,j+dj] | {
+                    /parta := 1 & write("\n",tick," Collision at (",j+dj-1,",",i+di-1,")")
+                    carts[i,j] := &null
+                    carts[i+di,j+dj].dir := "X" # Mark as a dead cart..
+                    carts[i+di,j+dj].t := tick
+                    next
+                }
+                ncarts +:= 1
+                lj := j+dj
+                li := i+di
+                dmap := &null
+                case tracks[i+di,j+dj] of {
+                    #              ^v<>
+                    "/" : dmap := "><v^"
+                    "\\": dmap := "<>^v"
+                    "+": {
+                        dmap := intersections[carts[i+di,j+dj].nturn]
+                        carts[i+di,j+dj].nturn := carts[i+di,j+dj].nturn % 3 + 1
+                    }
+                }
+                if \dmap then carts[i+di,j+dj].dir := map(carts[i+di,j+dj].dir,"^v<>",dmap)
+            }
+        }
+        if ncarts = 1 then break
+    }
+    write("Last cart at: (",lj-1,",",li-1,")")
+end
