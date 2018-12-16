@@ -1,0 +1,68 @@
+procedure main()
+    rules := []
+    rulemap := table()
+    while line := trim(read()) do {
+        line ? {
+            if pos(0) then next
+            if ="initial state:" then {
+                tab(many(' ')) &
+                pots := tab(0)
+            } else  {
+                rule := tab(many('.#'))
+                tab(upto('.#'))
+                sub := move(1)
+                put(rules,rule)
+                rulemap[rule] := sub
+            }
+        }
+    }
+    rulelen := *rules[1]    # Get the len of one rule
+    C := integer(rulelen/2)  # Get the center of a rule
+    write("C=",C," ",rulelen)
+    O := OO := 0             # Current index of left most pot
+    write(right(0,3)," ",right(ncount := count(pots,O),5)," ",right(O,5)," : ",pots)
+    opots := ""
+    every gen := seq() do {
+        opots := pots
+        OO := O
+        ocount := ncount
+        if upto('#',pots) <= rulelen then {
+            O -:= rulelen
+            pots[1:1] := repl(".",rulelen)
+            #write("adding to left")
+        }
+        if upto('#',pots,*pots-rulelen) then {
+            pots ||:= repl(".",rulelen)
+            #write("adding to right")
+        }
+        npots := repl('.',*pots)
+        every I := find(rule := !rules,pots) do {
+            #write(right(I,3)," [", pots[I+:rulelen],"] <",rule,"> =>",rulemap[rule])
+            npots[I+C] := rulemap[rule]
+        }
+        #erite(right(gen,4)," :",npots)
+
+        pots := npots
+        t := upto('#',pots)
+        O +:= t-1
+        pots[1:t] := ""
+        pots := trim(pots,".")
+
+        #write("[",opots,"]")
+        #write("<",pots,">")
+        ncount := count(pots,O)
+        write(right(gen,3)," ",right(ncount,5),right(O,5)," : ",pots)
+        if gen = 20 then write("Count at generation 20 ",ncount)
+
+        if opots == pots then {
+            write("stable pattern at generation ",gen-1, " O=",OO, " dO=",O-OO," SUM=",ocount, " dSUM=",ncount-ocount )
+            write("Sum at 50000000000 = ", ncount + (ncount-ocount)*(50000000000-gen) )
+            break
+        }
+    }
+end
+procedure count(s,O)
+    sum := 0
+    every sum +:= upto('#',s) + O - 1
+    return sum
+end

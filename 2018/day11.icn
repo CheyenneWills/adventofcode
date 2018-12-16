@@ -1,0 +1,60 @@
+
+procedure main(args)
+    grid_serial_number := args[1]
+
+    maxpower := -999999999
+    every C := genpowerlevels(grid_serial_number, 3) &
+           C[4] = 3 &
+           C[1] > maxpower do {
+            maxpower := C[1]
+            cellloc := C
+            write("new MAX Fuel cell at ",cellloc[2],",",cellloc[3]," grid serial number ",grid_serial_number,":",cellloc[1])
+    }
+    write("Fuel cell at ",cellloc[2],",",cellloc[3]," grid serial number ",grid_serial_number,":",cellloc[1])
+
+    maxpower := -999999999
+    every C := genpowerlevels(grid_serial_number,300) &
+           C[1] > maxpower do {
+            maxpower := C[1]
+            cellloc := C
+            write("new MAX Fuel cell at ",cellloc[2],",",cellloc[3],",",cellloc[4]," grid serial number ",grid_serial_number,":",cellloc[1])
+    }
+    write("Fuel cell at ",cellloc[2],",",cellloc[3],",",cellloc[4]," grid serial number ",grid_serial_number,":",cellloc[1])
+end
+procedure genpowerlevels(grid_serial_number,SIZE)
+    every x := 1 to 300 do {
+        every y := 1 to 300 do {
+            cellpower := getpowerlevel(grid_serial_number,x,y)
+            writes(x,",",y," -> 1           \r")
+            suspend [cellpower,x,y,1]
+
+            every cellsize := 1 to SIZE-1 do {
+                if x+cellsize > 300 | y+cellsize > 300 then break
+
+                every cellpower +:= getpowerlevel(grid_serial_number,x+cellsize,      y to y+cellsize)
+                every cellpower +:= getpowerlevel(grid_serial_number,x to x+cellsize-1, y+cellsize)
+                writes(x,",",y," ->",cellsize+1," ",cellpower,"               \r")
+                suspend [cellpower,x,y,cellsize+1]
+            }
+        }
+    }
+end
+procedure getpowerlevel(grid_serial_number,x,y)
+    static CELLS
+    initial {
+        CELLS := list(300)
+        every CELLS[1 to 300] := list(300,&null)
+    }
+    if \CELLS[x,y] then return CELLS[x,y]
+
+    rack_ID := x + 10
+    powerlevel := rack_ID * y
+    powerlevel +:= grid_serial_number
+    powerlevel *:= rack_ID
+    powerlevel := right(string(powerlevel),3,'0')[1]
+    powerlevel -:= 5
+    CELLS[x,y] := powerlevel
+    # write("Fuel cell at ",x,",",y," grid serial number ",grid_serial_number," power level:",powerlevel)
+    return powerlevel
+
+end
