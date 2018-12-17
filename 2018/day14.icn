@@ -1,0 +1,44 @@
+procedure main()
+    input := trim(read())
+
+    scoreboard := "37"
+    e1 := 0
+    e2 := 1
+    part1 := &null
+    part2 := &null
+
+    repeat {
+        sum := scoreboard[e1+1] + scoreboard[e2+1]
+        scoreboard ||:= sum
+        # make new recipe
+        e1s := scoreboard[e1+1] + 1
+        e2s := scoreboard[e2+1] + 1
+
+        e1 := (e1+e1s) % *scoreboard
+        e2 := (e2+e2s) % *scoreboard
+        if /part1 & *scoreboard >= input + 11 then {
+            part1 := scoreboard[input+1 +:10]
+        }
+        part2 := find(input,scoreboard,*scoreboard- (*input+8))-1  & break
+
+    }
+
+    write("part1:",part1)
+    write("part2:",part2)
+end
+procedure dumpboard(sb,e1,e2)
+    e1 +:= 1
+    e2 +:= 1
+    l := e1 || " " || e2 || " :"
+    l := ""
+    every i := 1 to *sb do {
+        if i = e1 then l ||:= "("
+        else if i = e2 then l ||:= "["
+        else l ||:= " "
+        l ||:= sb[i]
+        if i = e1 then l ||:= ")"
+        else if i = e2 then l ||:= "]"
+        else l ||:= " "
+    }
+    write(l)
+end
